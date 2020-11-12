@@ -1,0 +1,23 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+elhura-ecom/node_modules
+elhura-ecom/.pnp
+elhura-ecom/.pnp.js
+
+# testing
+elhura-ecom//coverage
+
+# production
+elhura-ecom//build
+
+# misc
+elhura-ecom/.DS_Store
+elhura-ecom/.env.local
+elhura-ecom/.env.development.local
+elhura-ecom/.env.test.local
+elhura-ecom/.env.production.local
+
+elhura-ecom/npm-debug.log*
+elhura-ecom/yarn-debug.log*
+elhura-ecom/yarn-error.log*
