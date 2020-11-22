@@ -35,21 +35,21 @@ export const SidebarData = [
     cName: 'nav-text'
   },
   {
-    title: 'Support',
-    path: '/support',
-    icon: <IoIcons.IoMdHelpCircle />,
-    cName: 'nav-text'
-  },
-  {
     title: 'Créer un Compte',
     path: '/register',
-    icon: <AiIcons.AiOutlineLogin />,
+    icon: <AiIcons.AiOutlineUserAdd />,
     cName: 'nav-text'
   },
   {
     title: 'Se Connecter',
     path: '/log-In',
     icon: <AiIcons.AiOutlineLogin />,
+    cName: 'nav-text'
+  },
+  {
+    title: 'Support',
+    path: '/support',
+    icon: <IoIcons.IoMdHelpCircle />,
     cName: 'nav-text'
   },
   {

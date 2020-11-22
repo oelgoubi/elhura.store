@@ -1,6 +1,6 @@
   
 import React from 'react';
-import LogInForm from '../components/Navbar/Auth/LogInForm';
+import LogInForm from '../components/Auth/LogInForm';
 
 function LogIn() {
   return (
