@@ -39,5 +39,23 @@ export const SidebarData = [
     path: '/support',
     icon: <IoIcons.IoMdHelpCircle />,
     cName: 'nav-text'
+  },
+  {
+    title: 'Créer un Compte',
+    path: '/register',
+    icon: <AiIcons.AiOutlineLogin />,
+    cName: 'nav-text'
+  },
+  {
+    title: 'Se Connecter',
+    path: '/log-In',
+    icon: <AiIcons.AiOutlineLogin />,
+    cName: 'nav-text'
+  },
+  {
+    title: 'Se Déconnecter',
+    path: '/log-out',
+    icon: <AiIcons.AiOutlineLogout />,
+    cName: 'nav-text'
   }
 ];
