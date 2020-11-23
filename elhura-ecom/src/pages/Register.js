@@ -1,6 +1,6 @@
   
 import React from 'react';
-import Registration from '../components/Navbar/Auth/Registration'
+import Registration from '../components/Auth/Registration'
 
 function Register() {
   return (
