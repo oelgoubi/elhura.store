@@ -132,7 +132,7 @@ class LogInForm extends Component {
               type="submit"
               onClick={this.submitRegistration}
             >
-              Join
+              Se Connecter
             </Button>
           </form>
 
