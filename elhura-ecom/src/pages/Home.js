@@ -1,6 +1,7 @@
 import React from 'react';
 import { fade, makeStyles } from "@material-ui/core/styles";
 import SearchIcon from '@material-ui/icons/Search'
+import ArticleList from '../components/ArticlesManegement/ArticleList'
 import {
   Toolbar,
   TextField
@@ -45,6 +46,7 @@ function Home() {
           />
         </div>
       </Toolbar>
+      <ArticleList />
     </div>
   );
 }
