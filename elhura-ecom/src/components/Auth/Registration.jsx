@@ -1,30 +1,48 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { register } from "./RegistrationStyles";
-import InputAdornment from "@material-ui/core/InputAdornment";
 
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Paper from "@material-ui/core/Paper";
 import Avatar from "@material-ui/core/Avatar";
-import { FormControl, Input, InputLabel, Button } from "@material-ui/core";
-import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
 import Snackbar from "@material-ui/core/Snackbar";
 import SnackbarContent from "@material-ui/core/SnackbarContent";
 import IconButton from "@material-ui/core/IconButton";
 import ErrorIcon from "@material-ui/icons/Error";
-import VisibilityTwoToneIcon from "@material-ui/icons/VisibilityTwoTone";
-import VisibilityOffTwoToneIcon from "@material-ui/icons/VisibilityOffTwoTone";
 import CloseIcon from "@material-ui/icons/Close";
+import RegistrationForm from "./RegistrationForm";
+import ButtonsAs from "./ButtonsAs";
+import RegistrationFormCustomer from "./RegistrationFormCustomer";
+import RegistrationFormCompany from "./RegistrationFormCompany";
+import RegistrationFormAdmin from "./RegistrationFormAdmin";
+import logo from "../../images/logo.jpg";
 
 class Registration extends Component {
   state = {
     email: "",
     password: "",
-    passwordConfrim: "",
+    passwordConfirm: "",
     hidePassword: true,
     error: null,
-    errorOpen: false
+    errorOpen: false,
+    showSignUpChoices: false,
+    signUpChoices: {customer: false, company: false, admin: false},
+    firstname: "",
+    lastname: "",
+    birthdate: "",
+    birthplace: "",
+    name: "",
+    siret: "",
+    documents: "",
+    street: "",
+    postalCode: "",
+    city: "",
+    region: "",
+    country: ""
   };
+
+  componentDidMount() {
+  }
 
   errorClose = e => {
     this.setState({
@@ -38,34 +56,63 @@ class Registration extends Component {
     });
   };
 
-  passwordMatch = () => this.state.password === this.state.passwordConfrim;
+  passwordMatch = () => this.state.password === this.state.passwordConfirm;
 
   showPassword = () => {
     this.setState(prevState => ({ hidePassword: !prevState.hidePassword }));
   };
 
   isValid = () => {
-    if (this.state.email === "") {
+    if (this.state.email === "" || this.state.password === "" || this.state.passwordConfirm === "") {
       return false;
     }
     return true;
   };
+
+  isEmailValid = () => {
+    if (/^([a-z0-9.]+@[a-z0-9]+\.[a-z0-9]+)$/.test(this.state.email)) {
+      return true;
+    }
+    return false;
+  }
+
   submitRegistration = e => {
     e.preventDefault();
-    if (!this.passwordMatch()) {
+    if (!this.isEmailValid()) {
       this.setState({
         errorOpen: true,
-        error: "Passwords don't match"
+        error: "Invalid email"
       });
+    }else{
+      if (!this.passwordMatch()) {
+        this.setState({
+          errorOpen: true,
+          error: "Passwords don't match"
+        });
+      }else{
+        const newUserCredentials = {
+          email: this.state.email,
+          password: this.state.password,
+          passwordConfirm: this.state.passwordConfirm,
+          showSignUpChoices: true
+        };
+        this.setState(newUserCredentials);
+        console.log("this.props.newUserCredentials", newUserCredentials);
+      }
     }
-    const newUserCredentials = {
-      email: this.state.email,
-      password: this.state.password,
-      passwordConfrim: this.state.passwordConfrim
-    };
-    console.log("this.props.newUserCredentials", newUserCredentials);
     //dispath to userActions
   };
+
+  completeRegistration =  e => {
+    e.preventDefault();
+    console.log(this.state);
+  }
+
+  loadRegistrationFormCustomer = choices => e => {
+    // Here we request the back end to insert data (email, password) in db
+    // We only update the state of the component if we have received a response from the back
+    this.setState({signUpChoices:choices});
+  }
 
   render() {
     const { classes } = this.props;
@@ -74,106 +121,25 @@ class Registration extends Component {
         <CssBaseline />
 
         <Paper className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <PeopleAltIcon className={classes.icon} />
-          </Avatar>
+          {<Avatar className={classes.avatar}>
+            <img className={classes.logo} src={logo} alt="Logo" />
+                      </Avatar>}
           <form
-            className={classes.form}
-            onSubmit={() => this.submitRegistration}
+              className={classes.form}
+              onSubmit={() => this.submitRegistration}
           >
-            <FormControl required fullWidth margin="normal">
-              <InputLabel htmlFor="email" className={classes.labels}>
-                e-mail
-              </InputLabel>
-              <Input
-                name="email"
-                type="email"
-                autoComplete="email"
-                className={classes.inputs}
-                disableUnderline={true}
-                onChange={this.handleChange("email")}
-              />
-            </FormControl>
-
-            <FormControl required fullWidth margin="normal">
-              <InputLabel htmlFor="password" className={classes.labels}>
-                password
-              </InputLabel>
-              <Input
-                name="password"
-                autoComplete="password"
-                className={classes.inputs}
-                disableUnderline={true}
-                onChange={this.handleChange("password")}
-                type={this.state.hidePassword ? "password" : "input"}
-                endAdornment={
-                  this.state.hidePassword ? (
-                    <InputAdornment position="end">
-                      <VisibilityOffTwoToneIcon
-                        fontSize="default"
-                        className={classes.passwordEye}
-                        onClick={this.showPassword}
-                      />
-                    </InputAdornment>
-                  ) : (
-                    <InputAdornment position="end">
-                      <VisibilityTwoToneIcon
-                        fontSize="default"
-                        className={classes.passwordEye}
-                        onClick={this.showPassword}
-                      />
-                    </InputAdornment>
-                  )
-                }
-              />
-            </FormControl>
-
-            <FormControl required fullWidth margin="normal">
-              <InputLabel htmlFor="passwordConfrim" className={classes.labels}>
-                confrim password
-              </InputLabel>
-              <Input
-                name="passwordConfrim"
-                autoComplete="passwordConfrim"
-                className={classes.inputs}
-                disableUnderline={true}
-                onClick={this.state.showPassword}
-                onChange={this.handleChange("passwordConfrim")}
-                type={this.state.hidePassword ? "password" : "input"}
-                endAdornment={
-                  this.state.hidePassword ? (
-                    <InputAdornment position="end">
-                      <VisibilityOffTwoToneIcon
-                        fontSize="default"
-                        className={classes.passwordEye}
-                        onClick={this.showPassword}
-                      />
-                    </InputAdornment>
-                  ) : (
-                    <InputAdornment position="end">
-                      <VisibilityTwoToneIcon
-                        fontSize="default"
-                        className={classes.passwordEye}
-                        onClick={this.showPassword}
-                      />
-                    </InputAdornment>
-                  )
-                }
-              />
-            </FormControl>
-            <Button
-              disabled={!this.isValid()}
-              disableRipple
-              fullWidth
-              variant="outlined"
-              className={classes.button}
-              type="submit"
-              onClick={this.submitRegistration}
-            >
-              Join
-            </Button>
+            {
+              !this.state.showSignUpChoices ?
+                    <RegistrationForm registration={this}/>
+                  :
+                  <React.Fragment>
+                    {!this.state.signUpChoices.customer ? null : <RegistrationFormCustomer registration={this}/>}
+                    {!this.state.signUpChoices.company ? null : <RegistrationFormCompany registration={this}/>}
+                    {!this.state.signUpChoices.admin ? null : <RegistrationFormAdmin registration={this}/>}
+                    {(this.state.signUpChoices.customer || this.state.signUpChoices.company || this.state.signUpChoices.admin) ? null : <ButtonsAs registration={this}/>}
+                  </React.Fragment>
+            }
           </form>
-
           {this.state.error ? (
             <Snackbar
               variant="error"

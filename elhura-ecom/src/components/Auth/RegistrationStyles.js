@@ -2,8 +2,9 @@ import { red } from "@material-ui/core/colors";
 
 const orange = "#F2A74B";
 const textLight = "#eaf2f4";
-const textDark = "#0D0D0D";
-const borderLight = "rgba(206,212,218, .993)";
+const borderColor = "skyblue";
+const skyblueDark = "#71d6ff";
+const backgroundDark = "#3a3a3a";
 
 export const register = theme => ({
   main: {
@@ -26,9 +27,8 @@ export const register = theme => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    background:
-      "linear-gradient(180deg, rgba(169,198,217,1) 15%, rgba(242,167,75,1) 90%)",
-    boxShadow: ".2px 12px 18px rgba(131,153,167,0.6)",
+    background: backgroundDark,
+    border: "5px solid skyblue",
 
     "&:hover": {
       boxShadow: "0px 24px 36px rgba(131,153,167,0.99)"
@@ -37,29 +37,34 @@ export const register = theme => ({
   avatar: {
     marginTop: 20,
     position: "relative",
-    background: "rgba(255,255,255,0.85)",
+    background: "skyblue",
     width: "100px",
-    height: "100px",
-    boxShadow: "0px 0px 12px rgba(131,153,167,0.99)"
+    height: "100px"
+  },
+
+  logo: {
+    width: "110px"
   },
 
   icon: {
     width: "80px",
     height: "80px",
-    color: "rgba(131,153,167,0.79)"
+    color: backgroundDark
   },
 
   form: {
     margin: theme.spacing(4)
   },
   labels: {
-    padding: `${theme.spacing(1)}px ${theme.spacing(4)}px`,
-    fontSize: "10px",
+    padding: `0px ${theme.spacing(4)}px`,
+    fontSize: "12px",
     lineHeight: "5px",
     fontFamily: "PT Mono, monospace",
-    fontWeight: 300,
-    opacity: 0.45,
-    color: `${textDark} !important`
+    fontWeight: "bold",
+    color: `${skyblueDark} !important`
+  },
+  labelBirthDate: {
+    transform : "translate(0, 1.5px) scale(0.75) !important"
   },
 
   inputs: {
@@ -67,13 +72,13 @@ export const register = theme => ({
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     fontFamily: "Cutive Mono, monospace",
-    color: textDark,
+    color: "white !important",
     fontSize: "14px",
-    padding: `${theme.spacing(1.5)}px ${theme.spacing(1)}px`,
+    padding: `5px ${theme.spacing(1)}px`,
     borderRadius: "8px",
-    border: "1.4px solid",
-    boxShadow: "1px 2px 20px rgba(169,198,217,0.29457423) ",
-    borderColor: borderLight,
+    border: `1.4px solid ${borderColor}`,
+    marginBottom: "-15px !important",
+    marginTop: "10px !important",
 
     "&:hover": {
       background: "rgba(169,198,217,0.36457423) "
@@ -81,14 +86,14 @@ export const register = theme => ({
   },
 
   button: {
-    color: textDark,
-    background: "rgba(255,255,255,.45)",
+    color: `${backgroundDark} !important`,
+    background: "skyblue",
     position: "relative",
     fontWeight: 400,
     fontFamily: "Raleway, sans-serif",
     overflow: "hidden",
     marginTop: theme.spacing(6),
-    padding: `${theme.spacing(1.6)}px`,
+    padding: "5px !important",
     border: "none",
     borderRadius: "8px",
     letterSpacing: "3px",
@@ -130,9 +135,15 @@ export const register = theme => ({
       color: textLight
     }
   },
+  buttonJoin: {
+    marginTop: "25px !important"
+  },
+  buttonAs: {
+    marginTop: "5px"
+  },
   error: {
     border: `1.2px solid ${red[900]}`,
-    background: "rgba(169,198,217,0.29457423)",
+    background: "rgba(169,198,217,0.29)",
     color: red[900],
     fontSize: "14px",
     fontWeight: 400,
@@ -143,7 +154,6 @@ export const register = theme => ({
   },
 
   passwordEye: {
-    color: "rgba(131,153,167,0.9)",
-    opacity: 0.7
+    color: "skyblue"
   }
 });
