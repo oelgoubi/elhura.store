@@ -1,6 +1,6 @@
 import RegistrationFormCustomer from "./RegistrationFormCustomer";
 import {withStyles} from "@material-ui/core/styles";
-import {register} from "./RegistrationStyles";
+import {register} from "../Styles/RegistrationStyles";
 import { Component } from "react";
 
 class RegistrationFormAdmin extends Component {

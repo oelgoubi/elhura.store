@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
-import { register } from "./RegistrationStyles";
+import { register } from "./Styles/RegistrationStyles";
 
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Paper from "@material-ui/core/Paper";
@@ -10,12 +10,12 @@ import SnackbarContent from "@material-ui/core/SnackbarContent";
 import IconButton from "@material-ui/core/IconButton";
 import ErrorIcon from "@material-ui/icons/Error";
 import CloseIcon from "@material-ui/icons/Close";
-import RegistrationForm from "./RegistrationForm";
-import ButtonsAs from "./ButtonsAs";
-import RegistrationFormCustomer from "./RegistrationFormCustomer";
-import RegistrationFormCompany from "./RegistrationFormCompany";
-import RegistrationFormAdmin from "./RegistrationFormAdmin";
-import logo from "../../images/logo.jpg";
+import RegistrationForm from "./Forms/RegistrationForm";
+import ButtonsAs from "./Forms/ButtonsAs";
+import RegistrationFormCustomer from "./Forms/RegistrationFormCustomer";
+import RegistrationFormCompany from "./Forms/RegistrationFormCompany";
+import RegistrationFormAdmin from "./Forms/RegistrationFormAdmin";
+import logo from "../../../resources/images/logo.jpg";
 
 class Registration extends Component {
   state = {

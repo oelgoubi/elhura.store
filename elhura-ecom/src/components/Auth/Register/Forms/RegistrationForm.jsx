@@ -4,7 +4,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import VisibilityOffTwoToneIcon from "@material-ui/icons/VisibilityOffTwoTone";
 import VisibilityTwoToneIcon from "@material-ui/icons/VisibilityTwoTone";
 import {withStyles} from "@material-ui/core/styles";
-import {register} from "./RegistrationStyles";
+import {register} from "../Styles/RegistrationStyles";
 
 class RegistrationForm extends Component {
     render() {

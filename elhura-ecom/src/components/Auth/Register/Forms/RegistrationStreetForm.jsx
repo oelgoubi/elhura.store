@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import {FormControl, Input, InputLabel} from "@material-ui/core";
 import {withStyles} from "@material-ui/core/styles";
-import {register} from "./RegistrationStyles";
+import {register} from "../Styles/RegistrationStyles";
 
 class RegistrationStreetForm extends Component {
     render() {

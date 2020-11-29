@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import {Button} from "@material-ui/core";
 import {withStyles} from "@material-ui/core/styles";
-import {register} from "./RegistrationStyles";
+import {register} from "../Styles/RegistrationStyles";
 
 class ButtonsAs extends Component {
     render() {
