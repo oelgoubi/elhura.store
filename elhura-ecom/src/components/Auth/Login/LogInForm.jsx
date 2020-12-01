@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
-import { register } from "./RegistrationStyles";
+import { register } from "../Register/Styles/RegistrationStyles";
 import InputAdornment from "@material-ui/core/InputAdornment";
 
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -16,11 +16,10 @@ import VisibilityTwoToneIcon from "@material-ui/icons/VisibilityTwoTone";
 import VisibilityOffTwoToneIcon from "@material-ui/icons/VisibilityOffTwoTone";
 import CloseIcon from "@material-ui/icons/Close";
 
-class Registration extends Component {
+class LogInForm extends Component {
   state = {
     email: "",
     password: "",
-    passwordConfrim: "",
     hidePassword: true,
     error: null,
     errorOpen: false
@@ -38,7 +37,6 @@ class Registration extends Component {
     });
   };
 
-  passwordMatch = () => this.state.password === this.state.passwordConfrim;
 
   showPassword = () => {
     this.setState(prevState => ({ hidePassword: !prevState.hidePassword }));
@@ -52,18 +50,16 @@ class Registration extends Component {
   };
   submitRegistration = e => {
     e.preventDefault();
-    if (!this.passwordMatch()) {
       this.setState({
         errorOpen: true,
         error: "Passwords don't match"
       });
-    }
-    const newUserCredentials = {
+    
+    const UserCredentials = {
       email: this.state.email,
       password: this.state.password,
-      passwordConfrim: this.state.passwordConfrim
     };
-    console.log("this.props.newUserCredentials", newUserCredentials);
+    console.log("this.props.UserCredentials", UserCredentials);
     //dispath to userActions
   };
 
@@ -127,40 +123,6 @@ class Registration extends Component {
                 }
               />
             </FormControl>
-
-            <FormControl required fullWidth margin="normal">
-              <InputLabel htmlFor="passwordConfrim" className={classes.labels}>
-                confrim password
-              </InputLabel>
-              <Input
-                name="passwordConfrim"
-                autoComplete="passwordConfrim"
-                className={classes.inputs}
-                disableUnderline={true}
-                onClick={this.state.showPassword}
-                onChange={this.handleChange("passwordConfrim")}
-                type={this.state.hidePassword ? "password" : "input"}
-                endAdornment={
-                  this.state.hidePassword ? (
-                    <InputAdornment position="end">
-                      <VisibilityOffTwoToneIcon
-                        fontSize="default"
-                        className={classes.passwordEye}
-                        onClick={this.showPassword}
-                      />
-                    </InputAdornment>
-                  ) : (
-                    <InputAdornment position="end">
-                      <VisibilityTwoToneIcon
-                        fontSize="default"
-                        className={classes.passwordEye}
-                        onClick={this.showPassword}
-                      />
-                    </InputAdornment>
-                  )
-                }
-              />
-            </FormControl>
             <Button
               disabled={!this.isValid()}
               disableRipple
@@ -170,7 +132,7 @@ class Registration extends Component {
               type="submit"
               onClick={this.submitRegistration}
             >
-              Join
+              Se Connecter
             </Button>
           </form>
 
@@ -214,4 +176,4 @@ class Registration extends Component {
   }
 }
 
-export default withStyles(register)(Registration);
+export default withStyles(register)(LogInForm);
