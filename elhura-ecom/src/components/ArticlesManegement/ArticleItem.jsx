@@ -10,7 +10,8 @@ import ShareIcon from '@material-ui/icons/Share';
 
 const useStyles = makeStyles({
     card:{
-        height:'500px'
+        height:'400px',
+        position:'relative'
     },
     bullet: {
         display: 'inline-block',
@@ -32,12 +33,16 @@ const useStyles = makeStyles({
         backgroundColor : 'grey',
         color:'black',
     },
+    actionBtns:{
+        position: "absolute",
+        bottom:'0'
+    }
    
 }); 
 
 const ArticleItem = (props) => {
     const classes = useStyles();
-    const { avatarUrl, title, subtitle, description, imageUrl } = props;
+    const { avatarUrl, title, description, imageUrl,price } = props;
 
 
     return (
@@ -51,20 +56,19 @@ const ArticleItem = (props) => {
                         <ShareIcon />
                     </IconButton>
                 }
-                title="Shrimp and Chorizo Paella"
-                subheader={subtitle}
+                title={title}
+                subheader={price}
             />
             <CardMedia
                 style={{height:"150px"}}
                 image={imageUrl}
-                title={title}
             />
             <CardContent>
                 <Typography variant="body2" component="p">
                     {description}
                 </Typography>
             </CardContent>
-            <CardActions>
+            <CardActions className={classes.actionBtns}>
                 <Button  variant="contained" className={classes.btn_commander}>Commander</Button>
                 <Button  variant="contained" className={classes.btn_offer}>Voir plus</Button>
             </CardActions>
