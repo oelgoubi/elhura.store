@@ -7,7 +7,7 @@ import articles from '../../mockData/constants'
 const Content = () => {
     const getAricles = (aricle) => {
         return (
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12}  sm={4}>
                 <ArticleItem {...aricle} />
             </Grid>
         );
@@ -16,7 +16,7 @@ const Content = () => {
 
   return (
     <Grid container spacing={2}>
-      {articles.map(artcile => getAricles(artcile))}
+      {articles.map(article => getAricles(article))}
     </Grid>
   );
 };

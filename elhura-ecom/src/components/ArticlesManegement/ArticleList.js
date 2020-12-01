@@ -39,7 +39,7 @@ function ArticleList() {
 
     return (
         <Grid container direction="column" >
-            <Grid item>
+            <Grid item sm={12}>
                 <Toolbar >
                     <div className={classes.searchContainer}>
                         <SearchIcon className={classes.searchIcon} />
