@@ -29,6 +29,7 @@ export const register = theme => ({
     alignItems: "center",
     background: backgroundDark,
     border: "5px solid skyblue",
+    minWidth: "fit-content",
 
     "&:hover": {
       boxShadow: "0px 24px 36px rgba(131,153,167,0.99)"
@@ -79,6 +80,7 @@ export const register = theme => ({
     border: `1.4px solid ${borderColor}`,
     marginBottom: "-15px !important",
     marginTop: "10px !important",
+    minWidth: "max-content",
 
     "&:hover": {
       background: "rgba(169,198,217,0.36457423) "

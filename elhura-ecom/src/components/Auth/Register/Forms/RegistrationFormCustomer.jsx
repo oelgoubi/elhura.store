@@ -37,8 +37,6 @@ class RegistrationFormCustomer extends Component {
                     />
                 </FormControl>
 
-                <RegistrationStreetForm registration={this.props.registration} />
-
                 <FormControl required={true} fullWidth margin="normal">
                     <InputLabel htmlFor="birthdate" className={`${classes.labels} ${classes.labelBirthDate}`}>
                         Birth date
@@ -53,19 +51,8 @@ class RegistrationFormCustomer extends Component {
                     />
                 </FormControl>
 
-                <FormControl required={true} fullWidth margin="normal">
-                    <InputLabel htmlFor="birthplace" className={classes.labels}>
-                        Birth place
-                    </InputLabel>
-                    <Input
-                        name="birthplace"
-                        type="text"
-                        autoComplete="birthplace"
-                        className={classes.inputs}
-                        disableUnderline={true}
-                        onChange={this.props.registration.handleChange("birthplace")}
-                    />
-                </FormControl>
+                <RegistrationStreetForm registration={this.props.registration} />
+
                 <Button
                     disabled={!this.props.registration.isValid()}
                     disableRipple

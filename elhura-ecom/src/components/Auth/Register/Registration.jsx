@@ -14,8 +14,8 @@ import RegistrationForm from "./Forms/RegistrationForm";
 import ButtonsAs from "./Forms/ButtonsAs";
 import RegistrationFormCustomer from "./Forms/RegistrationFormCustomer";
 import RegistrationFormCompany from "./Forms/RegistrationFormCompany";
-import RegistrationFormAdmin from "./Forms/RegistrationFormAdmin";
 import logo from "../../../resources/images/logo.jpg";
+import { Grid } from "@material-ui/core";
 
 class Registration extends Component {
   state = {
@@ -30,7 +30,6 @@ class Registration extends Component {
     firstname: "",
     lastname: "",
     birthdate: "",
-    birthplace: "",
     name: "",
     siret: "",
     documents: "",
@@ -105,77 +104,83 @@ class Registration extends Component {
 
   completeRegistration =  e => {
     e.preventDefault();
+    this.setState({
+      error: null
+    });
     console.log(this.state);
   }
 
-  loadRegistrationFormCustomer = choices => e => {
+  loadDetailsRegistrationForm = choices => e => {
     // Here we request the back end to insert data (email, password) in db
     // We only update the state of the component if we have received a response from the back
-    this.setState({signUpChoices:choices});
+    this.setState({
+      signUpChoices:choices
+    });
   }
 
   render() {
     const { classes } = this.props;
     return (
-      <div className={classes.main}>
-        <CssBaseline />
+        <Grid item>
+          <div className={classes.main}>
+            <CssBaseline />
 
-        <Paper className={classes.paper}>
-          {<Avatar className={classes.avatar}>
-            <img className={classes.logo} src={logo} alt="Logo" />
-                      </Avatar>}
-          <form
-              className={classes.form}
-              onSubmit={() => this.submitRegistration}
-          >
-            {
-              !this.state.showSignUpChoices ?
-                    <RegistrationForm registration={this}/>
-                  :
-                  <React.Fragment>
-                    {!this.state.signUpChoices.customer ? null : <RegistrationFormCustomer registration={this}/>}
-                    {!this.state.signUpChoices.company ? null : <RegistrationFormCompany registration={this}/>}
-                    {!this.state.signUpChoices.admin ? null : <RegistrationFormAdmin registration={this}/>}
-                    {(this.state.signUpChoices.customer || this.state.signUpChoices.company || this.state.signUpChoices.admin) ? null : <ButtonsAs registration={this}/>}
-                  </React.Fragment>
-            }
-          </form>
-          {this.state.error ? (
-            <Snackbar
-              variant="error"
-              key={this.state.error}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "center"
-              }}
-              open={this.state.errorOpen}
-              onClose={this.errorClose}
-              autoHideDuration={3000}
-            >
-              <SnackbarContent
-                className={classes.error}
-                message={
-                  <div>
+            <Paper className={`${classes.paper}`}>
+              {<Avatar className={classes.avatar}>
+                <img className={classes.logo} src={logo} alt="Logo" />
+              </Avatar>}
+              <form
+                  className={classes.form}
+                  onSubmit={() => this.submitRegistration}
+              >
+                {
+                  !this.state.showSignUpChoices ?
+                      <RegistrationForm registration={this}/>
+                      :
+                      <React.Fragment>
+                        {(this.state.signUpChoices.customer && !this.state.signUpChoices.company) ? <RegistrationFormCustomer registration={this}/> : null}
+                        {(!this.state.signUpChoices.customer && this.state.signUpChoices.company) ? <RegistrationFormCompany registration={this}/> : null}
+                        {(!this.state.signUpChoices.customer && !this.state.signUpChoices.company) ? <ButtonsAs registration={this}/> : null}
+                      </React.Fragment>
+                }
+              </form>
+              {this.state.error ? (
+                  <Snackbar
+                      variant="error"
+                      key={this.state.error}
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "center"
+                      }}
+                      open={this.state.errorOpen}
+                      onClose={this.errorClose}
+                      autoHideDuration={3000}
+                  >
+                    <SnackbarContent
+                        className={classes.error}
+                        message={
+                          <div>
                     <span style={{ marginRight: "8px" }}>
                       <ErrorIcon fontSize="large" color="error" />
                     </span>
-                    <span> {this.state.error} </span>
-                  </div>
-                }
-                action={[
-                  <IconButton
-                    key="close"
-                    aria-label="close"
-                    onClick={this.errorClose}
-                  >
-                    <CloseIcon color="error" />
-                  </IconButton>
-                ]}
-              />
-            </Snackbar>
-          ) : null}
-        </Paper>
-      </div>
+                            <span> {this.state.error} </span>
+                          </div>
+                        }
+                        action={[
+                          <IconButton
+                              key="close"
+                              aria-label="close"
+                              onClick={this.errorClose}
+                          >
+                            <CloseIcon color="error" />
+                          </IconButton>
+                        ]}
+                    />
+                  </Snackbar>
+              ) : null}
+            </Paper>
+          </div>
+        </Grid>
     );
   }
 }
