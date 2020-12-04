@@ -1,0 +1,34 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - ./mysql:/var/lib/mysql
+    ports:
+      - 3306:3306
+    restart: always
+    hostname: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: elhura_db
+      MYSQL_USER: elhura
+      MYSQL_PASSWORD: elhura
+    networks:
+      - web_server
+
+  adminer:
+    build: ./adminer
+    restart: always
+    ports:
+      - 8083:8080
+    links:
+      - mysql
+    networks:
+      - web_server
+
+networks:
+  web_server:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
