@@ -1,34 +1,27 @@
-version: '3'
+version: '3.7'
+
 services:
   mysql:
     image: mysql:5.7
-    volumes:
-      - ./mysql:/var/lib/mysql
-    ports:
-      - 3306:3306
     restart: always
-    hostname: mysql
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: elhura_db
-      MYSQL_USER: elhura
-      MYSQL_PASSWORD: elhura
-    networks:
-      - web_server
-
-  adminer:
-    build: ./adminer
-    restart: always
+      MYSQL_DATABASE: 'elhura_db'
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: 'elhura'
+      # You can use whatever password you like
+      MYSQL_PASSWORD: 'elhura'
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: 'root'
     ports:
-      - 8083:8080
-    links:
-      - mysql
-    networks:
-      - web_server
-
-networks:
-  web_server:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16
+      # <Port exposed> : < MySQL Port running inside container>
+      - '3306:3306'
+    expose:
+      # Opens port 3306 on the container
+      - '3306'
+      # Where our data will be persisted
+    volumes:
+      - ./mysql/elhura-db:/var/lib/mysql
+      - ./elhura.sql:/docker-entrypoint-initdb.d/init.sql
+# Names our volume
+volumes:
+  elhura_mysql_volume:
