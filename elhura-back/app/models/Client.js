@@ -52,7 +52,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DATE,
       allowNull: true
     },
-    birthplace: {
+    birthPlace: {
       type: DataTypes.STRING(254),
       allowNull: true
     }

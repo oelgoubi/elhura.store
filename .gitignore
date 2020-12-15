@@ -5,6 +5,8 @@ elhura-ecom/node_modules
 elhura-ecom/.pnp
 elhura-ecom/.pnp.js
 
+elhura-back/node_modules
+
 # testing
 elhura-ecom//coverage
 
