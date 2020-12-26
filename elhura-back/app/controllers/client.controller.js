@@ -4,13 +4,14 @@ const Op = db.Sequelize.Op;
 
 // Create and Save a new Client
 exports.create = (req, res) => {
+    console.log(req.body)
     // Validate request
     if(!req.body.idUser) {
         return res.status(400).send({
             message: "Client id can not be empty"
         });
     }
-
+    
     const client = new Client({
         idUser : req.body.idUser,
         idRole : req.body.idRole,

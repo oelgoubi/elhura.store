@@ -1,9 +1,13 @@
+require('dotenv').config()
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const morgan = require("morgan");
+const jwt = require("jsonwebtoken")
 
 const app = express();
 
+app.use(morgan('dev'))
 
 
 
@@ -35,7 +39,42 @@ app.get("/", (req, res) => {
 //   console.error('Unable to connect to the database:', error);
 // }
 
-require("./app/routes/client.routes")(app);
+app.post("/api/login",(req,res)=>{
+  const { email,password} = req.body;
+  // TODO : Authenticate User by checking if the  the email address exists
+  // And the password matchs the pwd in the DB
+
+
+  const user = { email : email}
+
+  const accessToken = jwt.sign(user,process.env.ACCESS_TOKEN_SECRET)
+  res.json({
+    accessToken
+  })
+})
+
+app.post
+
+
+
+function authenticateToken(req,res,next){
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]
+  if(token == null) return res.sendStatus(401)
+
+  jwt.verify(token,process.env.ACCESS_TOKEN_SECRET,(err,user)=>{
+    if(err) return res.sendStatus(403) 
+    req.user = user
+    next();
+  })
+}
+
+
+
+
+
+
+require("./app/routes/client.routes")(app,authenticateToken);
 require("./app/routes/company.routes")(app);
 require("./app/routes/admin.routes")(app);
 require("./app/routes/address.routes")(app);
