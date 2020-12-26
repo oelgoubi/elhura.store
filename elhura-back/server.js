@@ -40,20 +40,25 @@ app.get("/", (req, res) => {
 // }
 
 app.post("/api/login",(req,res)=>{
-  const { email,password} = req.body;
+  //const { email,password} = req.body;
   // TODO : Authenticate User by checking if the  the email address exists
   // And the password matchs the pwd in the DB
 
 
-  const user = { email : email}
-
-  const accessToken = jwt.sign(user,process.env.ACCESS_TOKEN_SECRET)
+  const user = { idUser : 1 ,email : 'othmane@hotmail.com,',username:'othy'}
+  // pass the payload , 
+  const accessToken = jwt.sign({user},process.env.ACCESS_TOKEN_SECRET)
   res.json({
     accessToken
   })
 })
 
-app.post
+app.post('/api/protected',authenticateToken,(req,res)=>{
+    res.json({
+      message:"You accesses the protected routed",
+      youAre : req.user
+    })
+});
 
 
 
