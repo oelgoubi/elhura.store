@@ -78,7 +78,7 @@ function authenticateToken(req,res,next){
 
 
 
-
+require("./app/routes/auth.routes")(app);
 require("./app/routes/client.routes")(app,authenticateToken);
 require("./app/routes/company.routes")(app);
 require("./app/routes/admin.routes")(app);
