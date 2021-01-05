@@ -1,4 +1,4 @@
-module.exports = app => {
+module.exports = (app,authenticateToken) => {
     const cartElementController = require("../controllers/cart-element.controller.js");
   
     var router = require("express").Router();
@@ -14,5 +14,5 @@ module.exports = app => {
     // Delete a cartElement by id
     router.delete("/:id", cartElementController.delete);
 
-    app.use('/api/cart-elements', router);
+    app.use('/api/cart-elements',authenticateToken, router);
   };

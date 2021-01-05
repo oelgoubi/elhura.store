@@ -1,4 +1,4 @@
-module.exports = app => {
+module.exports = (app,authenticateToken) => {
     const shippingController = require("../controllers/shipping.controller.js");
   
     var router = require("express").Router();
@@ -14,5 +14,5 @@ module.exports = app => {
     // Delete a shipping by id
     router.delete("/:id", shippingController.delete);
 
-    app.use('/api/shippings', router);
+    app.use('/api/shippings',authenticateToken, router);
   };

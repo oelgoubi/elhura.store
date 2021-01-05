@@ -1,4 +1,4 @@
-module.exports = app => {
+module.exports = (app,authenticateToken) => {
     const adminController = require("../controllers/admin.controller.js");
   
     var router = require("express").Router();
@@ -14,5 +14,5 @@ module.exports = app => {
     // Delete a admin by id
     router.delete("/:id", adminController.delete);
 
-    app.use('/api/admins', router);
+    app.use('/api/admins',authenticateToken, router);
   };

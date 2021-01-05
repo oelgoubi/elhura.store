@@ -1,4 +1,4 @@
-module.exports = app => {
+module.exports = (app,authenticateToken) => {
     const categoryController = require("../controllers/category.controller.js");
   
     var router = require("express").Router();
@@ -14,5 +14,5 @@ module.exports = app => {
     // Delete a category by id
     router.delete("/:id", categoryController.delete);
 
-    app.use('/api/categories', router);
+    app.use('/api/categories', authenticateToken,router);
   };

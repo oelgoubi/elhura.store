@@ -1,4 +1,4 @@
-module.exports = app => {
+module.exports = (app,authenticateToken)=> {
     const tagController = require("../controllers/tag.controller.js");
     const articleTagsController = require("../controllers/article-tags.controller.js");
 
@@ -24,5 +24,5 @@ module.exports = app => {
     // Delete a articleTag by idArticle and idTag
     router.delete("/:idTag/articles/:idArticle", articleTagsController.deleteOne);
 
-    app.use('/api/tags', router);
+    app.use('/api/tags',authenticateToken, router);
   };

@@ -1,4 +1,4 @@
-module.exports = app => {
+module.exports = (app,authenticateToken) => {
     const addressController = require("../controllers/address.controller.js");
   
     var router = require("express").Router();
@@ -14,5 +14,5 @@ module.exports = app => {
     // Delete an address by id
     router.delete("/:id", addressController.delete);
 
-    app.use('/api/addresses', router);
+    app.use('/api/addresses',authenticateToken, router);
   };
