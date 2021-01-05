@@ -1,11 +1,11 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-elhura-ecom/node_modules
+./elhura-ecom/node_modules
 elhura-ecom/.pnp
 elhura-ecom/.pnp.js
 
-elhura-back/node_modules
+./elhura-back/node_modules/
 
 # testing
 elhura-ecom//coverage

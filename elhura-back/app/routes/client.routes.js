@@ -1,4 +1,4 @@
-module.exports = app => {
+module.exports = (app,authenticateToken) => {
     const clientController = require("../controllers/client.controller.js");
     const favoritesController = require("../controllers/favorites.controller.js");
   
@@ -26,5 +26,5 @@ module.exports = app => {
     // Delete a single favorite by id
     router.delete("/:idUser/favorites/:idArticle", favoritesController.deleteOne);
 
-    app.use('/api/clients', router);
+    app.use('/api/clients',authenticateToken, router);
   };

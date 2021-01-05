@@ -1,9 +1,13 @@
+require('dotenv').config()
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const morgan = require("morgan");
+const jwt = require("jsonwebtoken")
 
 const app = express();
 
+app.use(morgan('dev'))
 
 
 
@@ -35,16 +39,34 @@ app.get("/", (req, res) => {
 //   console.error('Unable to connect to the database:', error);
 // }
 
-require("./app/routes/client.routes")(app);
-require("./app/routes/company.routes")(app);
-require("./app/routes/admin.routes")(app);
-require("./app/routes/address.routes")(app);
-require("./app/routes/article.routes")(app);
-require("./app/routes/cart-element.routes")(app);
-require("./app/routes/category.routes")(app);
-require("./app/routes/command.routes")(app);
-require("./app/routes/shipping.routes")(app);
-require("./app/routes/tag.routes")(app);
+
+function authenticateToken(req,res,next){
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]
+  if(token == null) return res.sendStatus(401)
+
+  jwt.verify(token,process.env.ACCESS_TOKEN_SECRET,(err,user)=>{
+    if(err) return res.sendStatus(403) 
+    req.user = user
+    next();
+  })
+}
+
+
+
+
+
+require("./app/routes/auth.routes")(app);
+require("./app/routes/client.routes")(app,authenticateToken);
+require("./app/routes/company.routes")(app,authenticateToken);
+require("./app/routes/admin.routes")(app,authenticateToken);
+require("./app/routes/address.routes")(app,authenticateToken);
+require("./app/routes/article.routes")(app,authenticateToken);
+require("./app/routes/cart-element.routes")(app,authenticateToken);
+require("./app/routes/category.routes")(app,authenticateToken);
+require("./app/routes/command.routes")(app,authenticateToken);
+require("./app/routes/shipping.routes")(app,authenticateToken);
+require("./app/routes/tag.routes")(app,authenticateToken);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

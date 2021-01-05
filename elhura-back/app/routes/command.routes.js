@@ -1,4 +1,4 @@
-module.exports = app => {
+module.exports = (app,authenticateToken) => {
     const commandController = require("../controllers/command.controller.js");
     const commandLineController = require("../controllers/command-line.controller.js");
   
@@ -28,5 +28,5 @@ module.exports = app => {
     // Delete a commandLine by idCommand and idCommandLine
     router.delete("/:idCommand/command-lines/:idCommandLine", commandLineController.deleteOne);
 
-    app.use('/api/commands', router);
+    app.use('/api/commands',authenticateToken, router);
   };

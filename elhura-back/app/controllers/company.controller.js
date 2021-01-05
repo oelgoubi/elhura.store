@@ -1,6 +1,9 @@
 const db = require("../models");
 const Company = db.Company;
 const Op = db.Sequelize.Op;
+const config = require('../config/db.config');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 // Create and Save a new Company
 exports.create = (req, res) => {
@@ -26,7 +29,17 @@ exports.create = (req, res) => {
     // Save Company in the database
     company.save()
         .then(data => {
-            res.send(data);
+            // create a token
+            const token = jwt.sign({ id: data.idUser,idRole : data.idRole }, config.ACCESS_TOKEN_SECRET, {
+                expiresIn: 86400 // expires in 24 hours
+            });
+            res.status(200).send({ auth: true, token,
+            newUser :{
+                username: data.username,
+                email: data.email,
+                idRole: data.idRole,
+            } });
+
         }).catch(err => {
         res.status(500).send({
             message: err.message || "Some error occurred while creating the Company."

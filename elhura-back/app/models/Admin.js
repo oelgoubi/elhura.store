@@ -19,10 +19,6 @@ module.exports = function(sequelize, DataTypes) {
     idRole: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      references: {
-        model: 'Role',
-        key: 'idRole'
-      }
     },
     username: {
       type: DataTypes.STRING(254),
@@ -71,14 +67,7 @@ module.exports = function(sequelize, DataTypes) {
         fields: [
           { name: "idAddress" },
         ]
-      },
-      {
-        name: "FK_userRole",
-        using: "BTREE",
-        fields: [
-          { name: "idRole" },
-        ]
-      },
+      }
     ]
   });
 };
