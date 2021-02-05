@@ -5,7 +5,7 @@ module.exports = function(sequelize, DataTypes) {
   return sequelize.define('Address', {
     idAddress: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       primaryKey: true
     },
     street: {

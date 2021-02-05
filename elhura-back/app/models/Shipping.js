@@ -5,7 +5,7 @@ module.exports = function(sequelize, DataTypes) {
   return sequelize.define('Shipping', {
     idShipping: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       primaryKey: true
     },
     shippingAddress: {
