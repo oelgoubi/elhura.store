@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { Avatar, CardHeader, CardMedia, IconButton } from '@material-ui/core';
 import ShareIcon from '@material-ui/icons/Share';
+import { useHistory } from "react-router-dom"
 
 const useStyles = makeStyles({
     card:{
@@ -43,7 +44,11 @@ const useStyles = makeStyles({
 const ArticleItem = (props) => {
     const classes = useStyles();
     const { avatarUrl, title, description, imageUrl,price } = props;
-
+    const history = useHistory();
+    const routeChange = ()=>{
+        let checkoutPage = '/checkout'
+        history.push(checkoutPage);  
+    }
 
     return (
         <Card className={classes.card}>
@@ -69,7 +74,7 @@ const ArticleItem = (props) => {
                 </Typography>
             </CardContent>
             <CardActions className={classes.actionBtns}>
-                <Button  variant="contained" className={classes.btn_commander}>Commander</Button>
+                <Button  variant="contained" className={classes.btn_commander} onClick={routeChange}>Commander</Button>
                 <Button  variant="contained" className={classes.btn_offer}>Voir plus</Button>
             </CardActions>
         </Card>

@@ -8,6 +8,7 @@ import Reports from './pages/Reports';
 import Products from './pages/Products';
 import Register from './pages/Register';
 import LogIn from './pages/LogIn';
+import CheckoutPage from './pages/CheckoutPage';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path='/products' component={Products} />
           <Route path="/register" component={Register} />
           <Route path="/log-In" component={LogIn} />
+          <Route path="/checkout" component={CheckoutPage} />
         </Switch>
       </Router>
     </>
