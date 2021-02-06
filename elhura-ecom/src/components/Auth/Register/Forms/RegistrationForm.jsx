@@ -22,6 +22,7 @@ class RegistrationForm extends Component {
                         className={classes.inputs}
                         disableUnderline={true}
                         onChange={this.props.registration.handleChange("email")}
+                        value={this.props.registration.state.email}
                     />
                 </FormControl>
 
@@ -98,9 +99,9 @@ class RegistrationForm extends Component {
                     variant="outlined"
                     className={`${classes.buttonJoin} ${classes.button}`}
                     type="submit"
-                    onClick={this.props.registration.submitRegistration}
+                    onClick={(e) => this.props.registration.submitRegistration(e)}
                 >
-                    Join
+                    Join Here
                 </Button>
             </React.Fragment>
         );
