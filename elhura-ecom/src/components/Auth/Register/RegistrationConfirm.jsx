@@ -14,10 +14,10 @@ import CloseIcon from "@material-ui/icons/Close";
 import logo from "../../../resources/images/logo.jpg";
 import { Grid } from "@material-ui/core";
 import RegistrationConfirmation from "./Forms/RegistrationConfirmation";
-import axios from "axios";
 import {createBrowserHistory} from 'history';
 
 require('dotenv').config();
+const authService = require('../../../services/auth');
 
 export const history = createBrowserHistory({forceRefresh:true})
 
@@ -89,16 +89,16 @@ class RegistrationConfirm extends Component {
         error: null
       });
 
-      await axios({
-        method: 'POST',
-        url: '/api/auth/validate',
-        data: {
-          code: this.state.otppassword
-        }
-      });
-      history.push('/', {
-        isAuthenticated : true
-      });
+      const response = await authService.validateRegister(this.state.otppassword)
+
+      if (response !== true) {
+        this.setState({
+          errorOpen: true,
+          error: "Incorrect OTP password"
+        });
+      } else{
+        history.push('/');
+      }
     }else{
       this.setState({
         errorOpen: true,

@@ -69,70 +69,69 @@ exports.validate = (req, res) => {
             let fetchedUser = await userService.checkIfUserExistsBy("idUser", user.id, user.idRole);
             if (fetchedUser.length === 0){
                 return res.json({
+                    auth : false,
                     message : 'User doesn\'t exist'
                 });
             }
             if (fetchedUser.length > 1){
                 return res.json({
+                    auth : false,
                     message : 'Too many rows fetched'
                 });
             }
 
-            const { access_token, refresh_token } = authService.generateToken(user.id, user.idRole);
+            if (code===fetchedUser[0].validationCode) {
+                const { access_token, refresh_token } = authService.generateToken(user.id, user.idRole);
 
-            userService.updateField('isValid', true, user.id);
+                userService.updateField('isValid', true, user.id);
 
-            res.cookie('refresh_token', refresh_token, { httpOnly : true, maxAge : 2*3600*1000 });
-            res.clearCookie('canConfirmRegister');
-
-            res.send({
-                auth: code===fetchedUser[0].validationCode
-            })
+                res.cookie('access_token', access_token, { httpOnly : true, maxAge : 3600*1000 });
+                res.cookie('refresh_token', refresh_token, { httpOnly : true, maxAge : 2*3600*1000 });
+                res.clearCookie('canConfirmRegister');
+                res.send({
+                    auth: true
+                })
+            } else{
+                res.send({
+                    auth: false
+                })
+            }
         }
-        if(err) return res.sendStatus(403)
+        if(err) return res.json(403).send({
+            auth : false,
+            message : "Error"
+        })
         req.user = user
     })
 }
 
 // Authenticate a new User
 exports.login = async (req, res) => {
-    let user;
 
     // Check if the user exist using the mail and use bcrypt to compare the pwd
-     user = await Client.findAll({ where :{
-        email : req.body.email
-    }})
-    if(user.length === 0)
-    {
-        user = await Company.findAll({ where :{
-            email : req.body.email
-        }})
-        if(user.length === 0)
-        {
-            user = await Admin.findAll({ where :{
-                idUser : req.body.idUser
-            }})
-            if(user.length === 0)
-           {
-               res.json(404).send({
-                   message:'User Not Found'
-               })
-           }
-        }
-        
+    const user = await userService.checkIfUserExistsBy("email", req.body.email, -1);
+
+    let number = user.length;
+
+    if(number === 0) {
+        return res.json(404).send({
+            auth: false,
+            message:'User Not Found'
+        })
+    } else {
+        const passwordIsValid = bcrypt.compareSync(req.body.password,  user[0].password);
+        if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
+
+        // create a token witth jwt.sign and using a secret key
+        const { access_token, refresh_token } = authService.generateToken(user[0].idUser, user[0].idRole);
+
+        res.cookie('email', req.body.email, { httpOnly : true, maxAge : 2*3600*1000 });
+        res.cookie('access_token', access_token, { httpOnly : true, maxAge : 3600*1000 });
+        res.cookie('refresh_token', refresh_token, { httpOnly : true, maxAge : 2*3600*1000 });
+
+        // Return the token
+        res.status(200).send({ auth: true });
     }
-
-    const passwordIsValid = bcrypt.compareSync(req.body.password,  user[0].password);
-    if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
-
-    // create a token witth jwt.sign and using a secret key
-    const { access_token, refresh_token } = authService.generateToken(user[0].idUser, user[0].idRole);
-
-    res.cookie('access_token', access_token, { httpOnly : true, maxAge : 3600*1000 });
-    res.cookie('refresh_token', refresh_token, { httpOnly : true, maxAge : 2*3600*1000 });
-
-    // Return the token
-    res.status(200).send({ auth: true });
 };
 
 // Log Out a new User
@@ -142,6 +141,12 @@ exports.logout = (req, res) => {
 
 // check the validity of the token after each request
 exports.isAuthenticated = async (req, res) => {
+    if (req.cookies.email === undefined) {
+        return res.send({
+            auth: false
+        })
+    }
+
     const userExists = await userService.checkIfUserExistsBy("email", req.cookies.email, -1);
 
     let number = userExists.length;
@@ -149,10 +154,10 @@ exports.isAuthenticated = async (req, res) => {
     if(number === 0) {
         res.clearCookie('access_token');
         res.clearCookie('refresh_token');
-        res.send({
+        return res.send({
             auth: false
         })
-    } else{
+    } else {
         const refresh_token = req.cookies.refresh_token;
         const access_token = req.cookies.access_token;
         if(access_token == null || refresh_token == null) return res.sendStatus(401)

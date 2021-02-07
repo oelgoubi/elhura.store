@@ -42,7 +42,7 @@ export const SidebarData = [
   },
   {
     title: 'Se Connecter',
-    path: '/log-In',
+    path: '/login',
     icon: <AiIcons.AiOutlineLogin />,
     cName: 'nav-text'
   },

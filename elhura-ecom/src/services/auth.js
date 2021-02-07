@@ -32,6 +32,27 @@ export const canConfirmRegister = async () => {
         method: 'POST',
         url: '/api/auth/can-confirm-register'
     });
-    console.log(response.data);
     return response.data.flag;
+}
+
+export const validateRegister = async (otpPassword) => {
+    const response = await axios({
+        method: 'POST',
+        url: '/api/auth/validate',
+        data: {
+            code: otpPassword
+        }
+    });
+    return response.data.auth;
+}
+
+export const login = async (email) => {
+    const response = await axios({
+        method: 'POST',
+        url: '/api/auth/login',
+        body: {
+            email: email
+        }
+    });
+    return response.data.flag
 }

@@ -17,13 +17,15 @@ class App extends Component {
     super();
     this.state = {
       canMakeRegisterChoice: null,
-      canConfirmRegister: null
+      canConfirmRegister: null,
+      isAuthenticated: null
     };
     this.passToNextSteps = this.passToNextSteps.bind(this);
   }
 
   componentDidMount() {
     this.passToNextSteps();
+    this.isUserAuthenticated();
   }
 
   async passToNextSteps() {
@@ -36,8 +38,16 @@ class App extends Component {
     })
   }
 
+  async isUserAuthenticated() {
+    const isUserAuthenticated = await authService.isUserAuthenticated();
+
+    this.setState({
+      isAuthenticated: isUserAuthenticated
+    })
+  }
+
   render() {
-    const { canMakeRegisterChoice, canConfirmRegister } = this.state;
+    const { canMakeRegisterChoice, canConfirmRegister, isAuthenticated } = this.state;
     return (<>
       <Router>
         <Navbar />
@@ -48,7 +58,9 @@ class App extends Component {
           <Route exact path="/register">
             <Register app={this}/>
           </Route>
-          <Route exact path="/login" component={LogIn} />
+          <Route exact path="/login">
+            {isAuthenticated !== null ? (isAuthenticated !== true ? <LogIn/> : <Redirect to="/"/>) : null}
+          </Route>
           <Route exact path="/register/choices">
             {canMakeRegisterChoice !== null ? (canMakeRegisterChoice === true ? <RegisterChoices app={this}/> : <Redirect to="/register"/>) : null}
           </Route>

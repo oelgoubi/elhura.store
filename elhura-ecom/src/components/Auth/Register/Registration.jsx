@@ -14,13 +14,10 @@ import CloseIcon from "@material-ui/icons/Close";
 import RegistrationForm from "./Forms/RegistrationForm";
 import logo from "../../../resources/images/logo.jpg";
 import { Grid } from "@material-ui/core";
-import Cookies from 'universal-cookie';
 import axios from "axios";
 
 require('dotenv').config()
 const authService = require('../../../services/auth');
-
-const cookies = new Cookies();
 
 class Registration extends Component {
   state = {
@@ -95,8 +92,6 @@ class Registration extends Component {
 
   submitRegistration = async (e) => {
     e.preventDefault();
-
-    cookies.set('mymail', 'mike', { path : '/', maxAge: 3600});
 
     const response = await axios.post('/api/auth/check', {
       email: this.state.email
