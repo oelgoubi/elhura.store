@@ -41,7 +41,7 @@ exports.create = (req, res) => {
              // create a token
             const token = authService.generateRegisterToken(data.idUser, data.idRole);
 
-            let mailConfirmationOptions = mail.mailConfirmationOptions(verifyCode);
+            let mailConfirmationOptions = mail.mailConfirmationOptions(data.email, verifyCode);
 
             mail.smtpTransport().sendMail(mailConfirmationOptions, function(error, response){
                 if(error){

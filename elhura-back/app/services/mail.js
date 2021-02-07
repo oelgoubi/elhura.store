@@ -12,10 +12,10 @@ module.exports = {
             }
         });
     },
-    mailConfirmationOptions: function(verifyCode) {
+    mailConfirmationOptions: function(mailAddress, verifyCode) {
         return {
             from : process.env.MAIL_NO_REPLY,
-            to : 'mb.raharison@gmail.com',
+            to : mailAddress,
             subject : "Please confirm your Email account",
             html : "Hello,<br> Your OTP password is : <br> <h3>"+verifyCode+"</h3>"
         }
