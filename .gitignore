@@ -12,7 +12,7 @@ elhura-back/node_modules
 elhura-ecom//coverage
 
 # production
-elhura-ecom//build
+elhura-ecom/build
 
 # misc
 elhura-ecom/.DS_Store
