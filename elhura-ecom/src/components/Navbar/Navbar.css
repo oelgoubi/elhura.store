@@ -1,15 +1,22 @@
 .navbar {
-    background-color: #000000;
+    background-color: #3a3a3a;
     height: 80px;
     display: flex;
     justify-content: flex-start;
     align-items: center;
   }
   
-  .menu-bars {
+  .menu-bars, .avatar {
     margin-left: 2rem;
     font-size: 2rem;
     background: none;
+  }
+
+  .avatar {
+    color : skyblue;
+    right: 18px;
+    top: 25px;
+    position: absolute;
   }
   
   .nav-menu {

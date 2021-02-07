@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import { withRouter } from 'react-router-dom';
 import { withStyles } from "@material-ui/core/styles";
 import { register } from "./Styles/RegistrationStyles";
@@ -11,18 +11,15 @@ import SnackbarContent from "@material-ui/core/SnackbarContent";
 import IconButton from "@material-ui/core/IconButton";
 import ErrorIcon from "@material-ui/icons/Error";
 import CloseIcon from "@material-ui/icons/Close";
-import RegistrationForm from "./Forms/RegistrationForm";
+import ButtonsAs from "./Forms/ButtonsAs";
 import logo from "../../../resources/images/logo.jpg";
 import { Grid } from "@material-ui/core";
-import Cookies from 'universal-cookie';
 import axios from "axios";
 
 require('dotenv').config()
 const authService = require('../../../services/auth');
 
-const cookies = new Cookies();
-
-class Registration extends Component {
+class RegistrationChoices extends Component {
   state = {
     email: "",
     password: "",
@@ -42,41 +39,24 @@ class Registration extends Component {
     postalCode: "",
     city: "",
     region: "",
-    country: ""
+    country: "",
+    jwt: ""
   };
 
-  async componentDidMount() {
-    const response = await axios({
-      method: 'GET',
-      url: '/api/email'
-    });
-
-    /*let email = response.data.email;
-    if (email === ""){
-      email = cookies.get('email');
-    }*/
-
-    this.setState({
-      email: response.data.email ?? ""
-    });
-  };
+  componentDidMount() {
+    if(this.props.location.state !== undefined) {
+      this.setState({
+        email: this.props.location.state.email,
+        password: this.props.location.state.password,
+        passwordConfirm: this.props.location.state.passwordConfirm,
+      });
+    }
+  }
 
   errorClose = e => {
     this.setState({
       errorOpen: false
     });
-  };
-
-  handleChange = name => e => {
-    this.setState({
-      [name]: e.target.value
-    });
-  };
-
-  passwordMatch = () => this.state.password === this.state.passwordConfirm;
-
-  showPassword = () => {
-    this.setState(prevState => ({ hidePassword: !prevState.hidePassword }));
   };
 
   isValid = () => {
@@ -86,64 +66,44 @@ class Registration extends Component {
     return true;
   };
 
-  isEmailValid = () => {
-    if (/^([a-z0-9.]+@[a-z0-9]+\.[a-z0-9]+)$/.test(this.state.email)) {
-      return true;
-    }
-    return false;
-  };
+  register = async (choices) => {
+    const response = await axios.post('/api/auth/register', {
+      idUser: 3,
+      idRole: choices.customer ? 1 : 2,
+      idShipping: null,
+      idAddress: null,
+      username: null,
+      password: this.state.password,
+      email: this.state.email,
+      firstName: null,
+      lastName: null,
+      birthDate: null,
+      birthPlace: null
+    })
 
-  submitRegistration = async (e) => {
+    return await response;
+  }
+
+  loadDetailsRegistrationForm = async (choices, e) => {
     e.preventDefault();
+    // Here we request the back end to insert data (email, password) in db
+    // We only update the state of the component if we have received a response from the back
 
-    cookies.set('mymail', 'mike', { path : '/', maxAge: 3600});
+    await this.register(choices);
 
-    const response = await axios.post('/api/auth/check', {
-      email: this.state.email
-    });
+    const canConfirmRegister = await authService.canConfirmRegister();
 
-    if (response.data.userExists === true) {
-      this.setState({
-        errorOpen: true,
-        error: "Email address not available"
-      });
-    } else {
-      if (!this.isEmailValid()) {
-        this.setState({
-          errorOpen: true,
-          error: "Invalid email"
-        });
-      }else{
-        if (!this.passwordMatch()) {
-          this.setState({
-            errorOpen: true,
-            error: "Passwords don't match"
-          });
-        }else{
-          const newUserCredentials = {
-            email: this.state.email,
-            password: this.state.password,
-            passwordConfirm: this.state.passwordConfirm,
-            showSignUpChoices: true
-          };
-          this.setState(newUserCredentials);
+    this.props.app.setState({
+      canMakeRegisterChoice: false,
+      canConfirmRegister: canConfirmRegister,
+    })
 
-          const canMakeRegisterChoice = await authService.canMakeRegisterChoice();
-
-          this.props.app.setState({
-            canMakeRegisterChoice: canMakeRegisterChoice,
-            canConfirmRegister: false,
-          })
-
-          this.props.history.push('/register/choices', {
-            email: this.state.email,
-            password: this.state.password,
-            passwordConfirm: this.state.passwordConfirm
-          });
-        }
-      }
-    }
-  };
+    this.props.history.push('/register/confirm', {
+      email: this.state.email,
+      password: this.state.password,
+      passwordConfirm: this.state.passwordConfirm,
+    })
+  }
 
   render() {
     const { classes } = this.props;
@@ -160,7 +120,7 @@ class Registration extends Component {
                   className={classes.form}
                   onSubmit={() => this.submitRegistration}
               >
-                <RegistrationForm registration={this}/>
+                <ButtonsAs registration={this}/>
               </form>
               {this.state.error ? (
                   <Snackbar
@@ -203,4 +163,4 @@ class Registration extends Component {
   }
 }
 
-export default withRouter(withStyles(register)(Registration));
+export default withRouter(withStyles(register)(RegistrationChoices));

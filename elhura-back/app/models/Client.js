@@ -1,8 +1,9 @@
 /* jshint indent: 2 */
+const db = require("../models");
 
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('Client', {
+  let Client = sequelize.define('Client', {
     idUser: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -55,11 +56,20 @@ module.exports = function(sequelize, DataTypes) {
     birthPlace: {
       type: DataTypes.STRING(254),
       allowNull: true
+    },
+    isValid: {
+      type: Sequelize.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
+    validationCode: {
+      type: DataTypes.STRING(6),
+      allowNull: true
     }
   }, {
     sequelize,
     tableName: 'Client',
-    timestamps: false,
+    timestamps: true,
     indexes: [
       {
         name: "PRIMARY",
@@ -85,4 +95,5 @@ module.exports = function(sequelize, DataTypes) {
       },
     ]
   });
+  return Client;
 };

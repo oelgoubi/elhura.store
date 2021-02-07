@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import { withRouter } from 'react-router-dom';
 import { withStyles } from "@material-ui/core/styles";
 import { register } from "./Styles/RegistrationStyles";
@@ -11,19 +11,19 @@ import SnackbarContent from "@material-ui/core/SnackbarContent";
 import IconButton from "@material-ui/core/IconButton";
 import ErrorIcon from "@material-ui/icons/Error";
 import CloseIcon from "@material-ui/icons/Close";
-import RegistrationForm from "./Forms/RegistrationForm";
 import logo from "../../../resources/images/logo.jpg";
 import { Grid } from "@material-ui/core";
-import Cookies from 'universal-cookie';
+import RegistrationConfirmation from "./Forms/RegistrationConfirmation";
 import axios from "axios";
+import {createBrowserHistory} from 'history';
 
-require('dotenv').config()
-const authService = require('../../../services/auth');
+require('dotenv').config();
 
-const cookies = new Cookies();
+export const history = createBrowserHistory({forceRefresh:true})
 
-class Registration extends Component {
+class RegistrationConfirm extends Component {
   state = {
+    otppassword: "",
     email: "",
     password: "",
     passwordConfirm: "",
@@ -42,24 +42,19 @@ class Registration extends Component {
     postalCode: "",
     city: "",
     region: "",
-    country: ""
+    country: "",
+    jwt: ""
   };
 
   async componentDidMount() {
-    const response = await axios({
-      method: 'GET',
-      url: '/api/email'
-    });
-
-    /*let email = response.data.email;
-    if (email === ""){
-      email = cookies.get('email');
-    }*/
-
-    this.setState({
-      email: response.data.email ?? ""
-    });
-  };
+    if(this.props.location.state !== undefined) {
+      this.setState({
+        email: this.props.location.state.email,
+        password: this.props.location.state.password,
+        passwordConfirm: this.props.location.state.passwordConfirm,
+      });
+    }
+  }
 
   errorClose = e => {
     this.setState({
@@ -73,12 +68,6 @@ class Registration extends Component {
     });
   };
 
-  passwordMatch = () => this.state.password === this.state.passwordConfirm;
-
-  showPassword = () => {
-    this.setState(prevState => ({ hidePassword: !prevState.hidePassword }));
-  };
-
   isValid = () => {
     if (this.state.email === "" || this.state.password === "" || this.state.passwordConfirm === "") {
       return false;
@@ -86,64 +75,37 @@ class Registration extends Component {
     return true;
   };
 
-  isEmailValid = () => {
-    if (/^([a-z0-9.]+@[a-z0-9]+\.[a-z0-9]+)$/.test(this.state.email)) {
+  isOtpPasswordValid = () => {
+    if (/^([0-9]{6})$/.test(this.state.otppassword)) {
       return true;
     }
     return false;
-  };
+  }
 
-  submitRegistration = async (e) => {
+  completeRegistration = async (e) => {
     e.preventDefault();
+    if (this.isOtpPasswordValid()){
+      this.setState({
+        error: null
+      });
 
-    cookies.set('mymail', 'mike', { path : '/', maxAge: 3600});
-
-    const response = await axios.post('/api/auth/check', {
-      email: this.state.email
-    });
-
-    if (response.data.userExists === true) {
+      await axios({
+        method: 'POST',
+        url: '/api/auth/validate',
+        data: {
+          code: this.state.otppassword
+        }
+      });
+      history.push('/', {
+        isAuthenticated : true
+      });
+    }else{
       this.setState({
         errorOpen: true,
-        error: "Email address not available"
+        error: "Incorrect code format"
       });
-    } else {
-      if (!this.isEmailValid()) {
-        this.setState({
-          errorOpen: true,
-          error: "Invalid email"
-        });
-      }else{
-        if (!this.passwordMatch()) {
-          this.setState({
-            errorOpen: true,
-            error: "Passwords don't match"
-          });
-        }else{
-          const newUserCredentials = {
-            email: this.state.email,
-            password: this.state.password,
-            passwordConfirm: this.state.passwordConfirm,
-            showSignUpChoices: true
-          };
-          this.setState(newUserCredentials);
-
-          const canMakeRegisterChoice = await authService.canMakeRegisterChoice();
-
-          this.props.app.setState({
-            canMakeRegisterChoice: canMakeRegisterChoice,
-            canConfirmRegister: false,
-          })
-
-          this.props.history.push('/register/choices', {
-            email: this.state.email,
-            password: this.state.password,
-            passwordConfirm: this.state.passwordConfirm
-          });
-        }
-      }
     }
-  };
+  }
 
   render() {
     const { classes } = this.props;
@@ -160,7 +122,7 @@ class Registration extends Component {
                   className={classes.form}
                   onSubmit={() => this.submitRegistration}
               >
-                <RegistrationForm registration={this}/>
+                <RegistrationConfirmation registration={this}/>
               </form>
               {this.state.error ? (
                   <Snackbar
@@ -203,4 +165,4 @@ class Registration extends Component {
   }
 }
 
-export default withRouter(withStyles(register)(Registration));
+export default withRouter(withStyles(register)(RegistrationConfirm));

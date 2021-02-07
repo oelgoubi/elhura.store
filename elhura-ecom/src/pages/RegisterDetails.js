@@ -2,12 +2,12 @@
 import React from 'react';
 import Registration from '../components/Auth/Register/Registration'
 
-function Register(props) {
+function RegisterDetails() {
   return (
-    <div className='register'>
-        <Registration app={props.app}/>
+    <div className='register_details'>
+        <Registration />
     </div>
   );
 }
 
-export default Register;
+export default RegisterDetails;
