@@ -39,7 +39,7 @@ exports.create = (req, res) => {
                 expiresIn: 86400 // expires in 24 hours
             });
 
-            let mailConfirmationOptions = mail.mailConfirmationOptions(verifyCode);
+            let mailConfirmationOptions = mail.mailConfirmationOptions(data.email, verifyCode);
 
             mail.smtpTransport().sendMail(mailConfirmationOptions, function(error, response){
                 if(error){
