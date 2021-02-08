@@ -10,6 +10,19 @@ import { navbar } from "./Styles/NavbarStyles";
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 import {createBrowserHistory} from 'history';
+import {AppBar, Button, FormControl, Input, InputLabel, Toolbar} from "@material-ui/core";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Paper from "@material-ui/core/Paper";
+import Avatar from "@material-ui/core/Avatar";
+import logo from "../../resources/images/logo.jpg";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import VisibilityOffTwoToneIcon from "@material-ui/icons/VisibilityOffTwoTone";
+import VisibilityTwoToneIcon from "@material-ui/icons/VisibilityTwoTone";
+import Snackbar from "@material-ui/core/Snackbar";
+import SnackbarContent from "@material-ui/core/SnackbarContent";
+import ErrorIcon from "@material-ui/icons/Error";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
 
 const authService = require('../../services/auth');
 const userService = require('../../services/user');
@@ -59,6 +72,8 @@ class Navbar extends Component {
       sideBarData = sideBarData.filter(item => (item.show.authenticated === true && (item.showToUser.includes(this.props.userRole) || item.showToUser.includes(-1))))
     } else if (this.props.isAuthenticated !== null && !this.props.isAuthenticated) {
       sideBarData = sideBarData.filter(item => item.show.unauthenticated === true)
+    } else if(this.props.isAuthenticated === null) {
+      sideBarData = sideBarData.filter(item => item.show.unauthenticated === true)
     }
     return sideBarData.map((item, index) => {
       return (<li key={index} className={item.cName}>
@@ -81,6 +96,30 @@ class Navbar extends Component {
               <Link to='#' className='menu-bars'>
                 <FaIcons.FaBars onClick={this.showSidebar} />
               </Link>
+              {(this.props.isAuthenticated !== null && this.props.userRole === 2) && (<div>
+                <AppBar className={classes.appBar} position="static">
+                  <Toolbar>
+                    <Typography className={classes.name} variant="h6">
+                      Elhura
+                    </Typography>
+                    <Link to={"/articles"} className={classes.link}>
+                      <Typography variant="body2">
+                        Articles
+                      </Typography>
+                    </Link>
+                    <Link to={"/categories"} className={classes.link}>
+                      <Typography variant="body2">
+                        Categories
+                      </Typography>
+                    </Link>
+                    <Link to={"/articles/add"} className={classes.link}>
+                      <Typography variant="body2">
+                        Add
+                      </Typography>
+                    </Link>
+                  </Toolbar>
+                </AppBar>
+              </div>)}
               { this.props.isAuthenticated != null && (this.props.isAuthenticated === true &&
                 <div>
                   <Link to='#' className='avatar'>

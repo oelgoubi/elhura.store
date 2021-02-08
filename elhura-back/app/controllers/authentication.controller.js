@@ -39,6 +39,7 @@ exports.register = (req, res) => {
     // Hash the password with bcrypt
     const hashedPassword = bcrypt.hashSync(req.body.password, 8); 
     req.body.password = hashedPassword;
+    console.log("MICHAEL : "+idRole)
     switch(idRole)
     {
         case 0:

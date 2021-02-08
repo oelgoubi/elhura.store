@@ -2,37 +2,6 @@ const db = require("../models");
 const Article = db.Article;
 const Op = db.Sequelize.Op;
 
-// Create and Save a new Article
-exports.create = (req, res) => {
-    // Validate request
-    if(!req.body.idArticle) {
-        return res.status(400).send({
-            message: "Article id can not be empty"
-        });
-    }
-
-    const article = new Article({
-        idArticle : req.body.idArticle,
-        idUser : req.params.id,
-        idCategory : req.body.idCategory,
-        designation : req.body.designation,
-        unitPrice : req.body.unitPrice,
-        wholesalePrice : req.body.wholesalePrice,
-        avatarUrl : req.body.avatarUrl,
-        description : req.body.description
-    });
-
-    // Save Article in the database
-    article.save()
-        .then(data => {
-            res.send(data);
-        }).catch(err => {
-        res.status(500).send({
-            message: err.message || "Some error occurred while creating the Article."
-        });
-    });
-};
-
 // Retrieve all Articles from the database.
 exports.findAll = (req, res) => {
 

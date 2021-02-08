@@ -68,7 +68,7 @@ class RegistrationChoices extends Component {
 
   register = async (choices) => {
     const response = await axios.post('/api/auth/register', {
-      idUser: 3,
+      idUser: 4,
       idRole: choices.customer ? 1 : 2,
       password: this.state.password,
       email: this.state.email

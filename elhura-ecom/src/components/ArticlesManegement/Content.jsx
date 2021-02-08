@@ -28,7 +28,7 @@ class Content extends Component {
     }
 
     listArticles = async () => {
-        const articles = await articleService.fetchArticles();
+        const articles = await articleService.listArticles();
 
         this.setState({
             articles : articles

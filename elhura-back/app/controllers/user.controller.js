@@ -3,7 +3,6 @@ const db = require("../models");
 const userService = require('../services/user');
 
 exports.fetchUserRole = async (req, res) => {
-    console.log("HEllo" + req.cookies.access_token)
     if (req.cookies.email === undefined) {
         return res.send({
             userRole : -1

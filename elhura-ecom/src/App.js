@@ -11,6 +11,7 @@ import RegisterConfirm from './pages/RegisterConfirm';
 import RegisterChoices from './pages/RegisterChoices';
 import LogIn from './pages/LogIn';
 import FileUpload from "./components/Files/FileUpload";
+import AddArticle from "./components/ArticlesManegement/AddArticle";
 const authService = require('./services/auth');
 const userService = require('./services/user');
 const articleService = require('./services/article');
@@ -80,11 +81,14 @@ class App extends Component {
           <Route exact path='/products'>
             { (isAuthenticated !== null && userRole !== -1) ? ((isAuthenticated === true && userRole === 2) ?  <Products/> : <Redirect to="/"/>) : null }
           </Route>
+          <Route exact path='/articles/add'>
+            { (isAuthenticated !== null && userRole !== -1) ? ((isAuthenticated === true && userRole === 2) ?  <AddArticle/> : <Redirect to="/"/>) : null }
+          </Route>
           <Route exact path="/register">
-            { (isAuthenticated !== null) ? ((isAuthenticated === false || isAuthenticated === undefined) ?  <Register app={this}/> : <Redirect to="/"/>) : null }
+            { (isAuthenticated !== null) ? ((isAuthenticated === false || isAuthenticated === undefined) ?  <Register app={this}/> : <Redirect to="/"/>) : <Register app={this}/> }
           </Route>
           <Route exact path="/login">
-            { (isAuthenticated !== null) ? ((isAuthenticated === false || isAuthenticated === undefined) ?  <LogIn/> : <Redirect to="/"/>) : null }
+            { (isAuthenticated !== null) ? ((isAuthenticated === false || isAuthenticated === undefined) ?  <LogIn/> : <Redirect to="/"/>) : <LogIn/> }
           </Route>
           <Route exact path="/register/choices">
             {canMakeRegisterChoice !== null ? (canMakeRegisterChoice === true ? <RegisterChoices app={this}/> : <Redirect to="/register"/>) : null}

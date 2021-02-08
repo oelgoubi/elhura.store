@@ -45,20 +45,20 @@ const useStyles = makeStyles({
 const ArticleItem = (props) => {
     const classes = useStyles();
     //const { avatarUrl, title, description, imageUrl,price } = props;
-    const { designation, idCategory, unitPrice, wholesalePrice } = props;
+    const { designation, idCategory, unitPrice, wholesalePrice, description, avatarUrl} = props;
 
     return (
         <Card className={classes.card}>
             <CardMedia
                 style={{width : "150px", height:"150px"}}
-                image={msi}
+                image={avatarUrl}
             />
             <CardContent>
                 <Typography variant="body2" component="p">
-                    {idCategory}
+                    {designation}
                 </Typography>
                 <Typography variant="body2" component="p">
-                    {idCategory}
+                    {description}
                 </Typography>
             </CardContent>
             <CardActions className={classes.actionBtns}>

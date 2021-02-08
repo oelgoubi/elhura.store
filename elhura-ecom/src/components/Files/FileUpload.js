@@ -1,6 +1,9 @@
 import React, {Component, Fragment} from "react";
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { Box, Typography, Button, ListItem, withStyles } from '@material-ui/core';
+import Avatar from "@material-ui/core/Avatar";
+import imageIcon from "../../resources/images/imageIcon.png";
+import {file} from "./Styles/FileStyles";
 
 const fileService = require('../../services/file');
 
@@ -103,6 +106,7 @@ class FileUpload extends Component {
             isError
         } = this.state;
 
+        const { classes } = this.props
         return (
             <div className="mg20">
                 {currentFile && (
@@ -123,18 +127,15 @@ class FileUpload extends Component {
                         style={{ display: 'none' }}
                         type="file"
                         onChange={this.selectFile} />
-                    <Button
-                        className="btn-choose"
-                        variant="outlined"
-                        component="span" >
-                        Choose Files
-                    </Button>
+                    {<Avatar className={classes.avatar}>
+                        <img className={classes.logo} src={imageIcon} alt="Logo" />
+                    </Avatar>}
                 </label>
                 <div className="file-name">
                     {selectedFiles && selectedFiles.length > 0 ? selectedFiles[0].name : null}
                 </div>
                 <Button
-                    className="btn-upload"
+                    className={classes.upload}
                     color="primary"
                     variant="contained"
                     component="span"
@@ -147,7 +148,7 @@ class FileUpload extends Component {
                     {message}
                 </Typography>
 
-                <Typography variant="h6" className="list-header">
+                {/*<Typography variant="h6" className="list-header">
                     List of Files
                 </Typography>
                 <ul className="list-group">
@@ -159,10 +160,10 @@ class FileUpload extends Component {
                             <a href={file.url}>{file.name}</a>
                         </ListItem>
                     ))}
-                </ul>
+                </ul>*/}
             </div >
         );
     }
 }
 
-export default FileUpload;
+export default withStyles(file)(FileUpload);

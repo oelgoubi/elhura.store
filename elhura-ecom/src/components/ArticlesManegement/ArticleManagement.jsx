@@ -1,5 +1,6 @@
 import { styles } from "./css-common";
 import { withStyles } from "@material-ui/core";
+import { Component } from "react";
 
 class ArticleManagement extends Component {
     render() {
@@ -7,7 +8,7 @@ class ArticleManagement extends Component {
 
         return (
             <div>
-                <AppBar className={classes.appBar} position="static">
+                {/*<AppBar className={classes.appBar} position="static">
                     <Toolbar>
                         <Typography className={classes.name} variant="h6">
                             Elhura
@@ -18,7 +19,7 @@ class ArticleManagement extends Component {
                             </Typography>
                         </Link>
                     </Toolbar>
-                </AppBar>
+                </AppBar>*/}
             </div>
         );
     }

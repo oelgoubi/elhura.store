@@ -12,6 +12,15 @@ export const fetchArticles = async () => {
     return response.data;
 }
 
+export const listArticles = async () => {
+    const response = await axios({
+        method: 'GET',
+        url: '/api/list-articles'
+    });
+    console.log("RESPONSE : "+response)
+    return response.data;
+}
+
 export const getAll = async () => {
     return await axios({
         method: 'GET',

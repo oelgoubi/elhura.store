@@ -70,6 +70,7 @@ function authenticateToken(req,res,next){
 
 require("./app/routes/auth.routes")(app);
 require("./app/routes/file.routes")(app);
+require("./app/routes/list-article.routes")(app);
 require("./app/routes/user.routes")(app,authenticateToken);
 require("./app/routes/client.routes")(app,authenticateToken);
 require("./app/routes/company.routes")(app,authenticateToken);
