@@ -7,6 +7,7 @@ export const isUserAuthenticated = async () => {
             method: 'POST',
             url: '/api/auth/check-auth'
         });
+    console.log(response)
     return response.data.auth;
 }
 
@@ -32,6 +33,7 @@ export const canConfirmRegister = async () => {
         method: 'POST',
         url: '/api/auth/can-confirm-register'
     });
+    console.log("CAN CONFIRM : "+response.data.flag)
     return response.data.flag;
 }
 
@@ -46,13 +48,23 @@ export const validateRegister = async (otpPassword) => {
     return response.data.auth;
 }
 
-export const login = async (email) => {
+export const login = async (email, password) => {
+    console.log("HELLO BEFORE")
     const response = await axios({
         method: 'POST',
         url: '/api/auth/login',
-        body: {
-            email: email
+        data: {
+            email: email,
+            password: password,
         }
     });
-    return response.data.flag
+    return response.data.auth
+}
+
+export const logout = async () => {
+    const response = await axios({
+        method: 'POST',
+        url: '/api/auth/logout'
+    });
+    return response.data.logout
 }

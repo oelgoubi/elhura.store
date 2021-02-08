@@ -42,7 +42,6 @@ class LogInForm extends Component {
     });
   };
 
-
   showPassword = () => {
     this.setState(prevState => ({ hidePassword: !prevState.hidePassword }));
   };
@@ -57,9 +56,10 @@ class LogInForm extends Component {
   submitRegistration = async (e) => {
     e.preventDefault();
 
-    const login = await authService.login(this.state.email);
+    const login = await authService.login(this.state.email, this.state.password);
 
-    if (login !== false) {
+    console.log("EMAIL : "+login)
+    if (login === false) {
       this.setState({
         errorOpen: true,
         error: "Username or password invalid"
@@ -67,13 +67,6 @@ class LogInForm extends Component {
     } else{
       history.push('/');
     }
-    
-    const UserCredentials = {
-      email: this.state.email,
-      password: this.state.password,
-    };
-    console.log("this.props.UserCredentials", UserCredentials);
-    //dispath to userActions
   };
 
   render() {
@@ -88,7 +81,7 @@ class LogInForm extends Component {
           </Avatar>}
           <form
             className={classes.form}
-            onSubmit={() => this.submitRegistration}
+            onSubmit={this.submitRegistration}
           >
             <FormControl required fullWidth margin="normal">
               <InputLabel htmlFor="email" className={classes.labels}>
@@ -137,7 +130,6 @@ class LogInForm extends Component {
               />
             </FormControl>
             <Button
-              disabled={!this.isValid()}
               disableRipple
               fullWidth
               variant="outlined"

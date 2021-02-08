@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const utils = require('../helpers/utils');
 const mail = require('../services/mail');
+const authService = require('../services/auth');
 
 // Create and Save a new Admin
 exports.create = (req, res) => {
@@ -28,6 +29,7 @@ exports.create = (req, res) => {
         lastName : req.body.lastName,
         birthDate : req.body.birthDate,
         birthPlace : req.body.birthPlace,
+        isValid: false,
         validationCode: verifyCode
     });
 
@@ -35,16 +37,16 @@ exports.create = (req, res) => {
     admin.save()
         .then(data => {
             // create a token
-            const token = jwt.sign({ id: data.idUser,idRole : data.idRole }, config.ACCESS_TOKEN_SECRET, {
-                expiresIn: 86400 // expires in 24 hours
-            });
+            const token = authService.generateRegisterToken(data.idUser, data.idRole);
 
             let mailConfirmationOptions = mail.mailConfirmationOptions(data.email, verifyCode);
 
             mail.smtpTransport().sendMail(mailConfirmationOptions, function(error, response){
                 if(error){
+                    console.log(error);
                     res.end("error");
                 }else{
+                    console.log("Message sent: " + response.message);
                     res.end("sent");
                 }
             });

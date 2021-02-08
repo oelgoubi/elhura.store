@@ -1,17 +1,12 @@
-import React, {Component} from 'react';
-import {AppBar, Toolbar, withStyles } from "@material-ui/core";
-import Typography from "@material-ui/core/Typography";
-import {Link} from "react-router-dom";
+import { styles } from "./css-common";
+import { withStyles } from "@material-ui/core";
 
-class Products extends Component {
-    constructor() {
-        super();
-    }
-
+class ArticleManagement extends Component {
     render() {
         const { classes } = this.props
+
         return (
-            <div className='products'>
+            <div>
                 <AppBar className={classes.appBar} position="static">
                     <Toolbar>
                         <Typography className={classes.name} variant="h6">
@@ -19,12 +14,7 @@ class Products extends Component {
                         </Typography>
                         <Link to={"/tutorials"} className={classes.link}>
                             <Typography variant="body2">
-                                Tutorials
-                            </Typography>
-                        </Link>
-                        <Link to={"/add"} className={classes.link}>
-                            <Typography variant="body2">
-                                Add
+                                Articles
                             </Typography>
                         </Link>
                     </Toolbar>
@@ -34,4 +24,4 @@ class Products extends Component {
     }
 }
 
-export default Products;
+export default withStyles(styles)(ArticleManagement);
