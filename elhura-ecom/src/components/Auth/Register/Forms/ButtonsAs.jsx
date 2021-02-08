@@ -31,13 +31,11 @@ class ButtonsAs extends Component {
                     variant="outlined"
                     className={`${classes.buttonAs} ${classes.button}`}
                     type="submit"
-                    onClick={() => {
-                        this.props.registration.loadDetailsRegistrationForm({
-                            customer: false,
-                            company: true,
-                            admin: false
-                        })
-                    }}
+                    onClick={(e) => this.props.registration.loadDetailsRegistrationForm({
+                        customer: false,
+                        company: true,
+                        admin: false
+                    }, e)}
                 >
                     As seller company
                 </Button>

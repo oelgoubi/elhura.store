@@ -11,6 +11,8 @@ const authService = require('./app/services/auth');
 
 const app = express();
 
+global.__basedir = __dirname;
+
 app.use(morgan('dev'))
 
 var corsOptions = {
@@ -27,19 +29,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 
-/*app.use(
-    jwt({
-      secret: process.env.ACCESS_TOKEN_SECRET,
-      getAccessToken: req => req.cookies.access_token,
-      getRefreshToken: req => req.cookies.refresh_token
-    })
-);*/
-
-/*const csrfProtection = csrf({
-  cookie: true
-});
-app.use(csrfProtection);*/
-
 //sequelize
 const db = require("./app/models");
 db.sequelize.sync();
@@ -54,41 +43,16 @@ app.get("/", (req, res) => {
   res.json({ message: "Welcome to Elhura" });
 });
 
-app.get("/api/email", (req, res) => {
-  res.json({ email: req.cookies.email });
-});
-
-/*app.get("/token", (req, res) => {
-  res.cookie('token', 'sample-token', { httpOnly : true});
-  res.json({ message: "Welcome to Elhura" });
-});*/
-
-/*function authenticateToken(req,res,next){
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1]
-  if(token == null) return res.sendStatus(401)
-
-  jwt.verify(token,process.env.ACCESS_TOKEN_SECRET,(err,user)=>{
-    if (user !== undefined) {
-      if (user.hasOwnProperty('verifyCode')) {
-        console.log(user.verifyCode);
-      }
-    }
-    if(err) return res.sendStatus(403) 
-    req.user = user
-    next();
-  })
-  next();
-}*/
-
 function authenticateToken(req,res,next){
+  console.log("BANG")
   const refresh_token = req.cookies.refresh_token
   const access_token = req.cookies.access_token
-
-  if(access_token == null || refresh_token == null) return res.sendStatus(401)
+  console.log("ACCESS AND REFRESH : "+access_token+" "+refresh_token)
+  if(access_token === null || refresh_token === null || access_token === undefined || refresh_token === undefined) return res.sendStatus(401)
 
   jwt.verify(access_token,process.env.ACCESS_TOKEN_SECRET,(err,user)=>{
     if(err) {
+      console.log("BEUG")
       jwt.verify(refresh_token,process.env.REFRESH_TOKEN_ACCESS,(refresh_err, refresh_user)=>{
         if(refresh_user !== undefined) {
           const access_token = authService.refreshToken(refresh_user.id, refresh_user.idRole);
@@ -105,6 +69,9 @@ function authenticateToken(req,res,next){
 }
 
 require("./app/routes/auth.routes")(app);
+require("./app/routes/file.routes")(app);
+require("./app/routes/list-article.routes")(app);
+require("./app/routes/user.routes")(app,authenticateToken);
 require("./app/routes/client.routes")(app,authenticateToken);
 require("./app/routes/company.routes")(app,authenticateToken);
 require("./app/routes/admin.routes")(app,authenticateToken);

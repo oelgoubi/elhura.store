@@ -39,6 +39,7 @@ exports.register = (req, res) => {
     // Hash the password with bcrypt
     const hashedPassword = bcrypt.hashSync(req.body.password, 8); 
     req.body.password = hashedPassword;
+    console.log("MICHAEL : "+idRole)
     switch(idRole)
     {
         case 0:
@@ -97,7 +98,7 @@ exports.validate = (req, res) => {
                 })
             }
         }
-        if(err) return res.json(403).send({
+        if(err) return res.status(403).send({
             auth : false,
             message : "Error"
         })
@@ -107,20 +108,22 @@ exports.validate = (req, res) => {
 
 // Authenticate a new User
 exports.login = async (req, res) => {
-
+    console.log("EMAIL : "+req.body.email)
     // Check if the user exist using the mail and use bcrypt to compare the pwd
     const user = await userService.checkIfUserExistsBy("email", req.body.email, -1);
 
     let number = user.length;
 
     if(number === 0) {
-        return res.json(404).send({
+        res.status(404).send({
             auth: false,
             message:'User Not Found'
         })
     } else {
         const passwordIsValid = bcrypt.compareSync(req.body.password,  user[0].password);
-        if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
+        if (!passwordIsValid) {
+            res.status(401).send({auth: false, token: null});
+        }
 
         // create a token witth jwt.sign and using a secret key
         const { access_token, refresh_token } = authService.generateToken(user[0].idUser, user[0].idRole);
@@ -135,8 +138,23 @@ exports.login = async (req, res) => {
 };
 
 // Log Out a new User
-exports.logout = (req, res) => {
-   
+exports.logout = async (req, res) => {
+    const user = await userService.checkIfUserExistsBy("email", req.cookies.email, -1);
+
+    let number = user.length;
+
+    if(number === 0) {
+        return res.status(404).send({
+            logout: false,
+            message:'User not logged in'
+        })
+    } else {
+        res.clearCookie('access_token');
+        res.clearCookie('refresh_token');
+        return res.send({
+            logout: true
+        })
+    }
 };
 
 // check the validity of the token after each request
@@ -160,7 +178,7 @@ exports.isAuthenticated = async (req, res) => {
     } else {
         const refresh_token = req.cookies.refresh_token;
         const access_token = req.cookies.access_token;
-        if(access_token == null || refresh_token == null) return res.sendStatus(401)
+        if(access_token == null || refresh_token == null) return res.status(401).send({ auth : false, message : "Not authenticated"})
 
         jwt.verify(access_token,process.env.ACCESS_TOKEN_SECRET,(err,user)=>{
             if (user !== undefined) {
@@ -178,7 +196,7 @@ exports.isAuthenticated = async (req, res) => {
                             auth: true
                         })
                     }
-                    if(refresh_err) return res.sendStatus(403)
+                    if(refresh_err) return res.status(403).send({ auth : false, message : "Session expired" })
                 });
             }
             req.user = user;
@@ -188,11 +206,10 @@ exports.isAuthenticated = async (req, res) => {
 
 exports.canPassToNextRegisterSteps = async (req, res) => {
     let resp = false;
-    console.log("Hello");
     if (req.cookies.email !== undefined) {
         console.log(req.cookies.email);
         userExists = await userService.checkIfUserExistsBy("email", req.cookies.email, -1);
-        console.log("Mike", userExists);
+
         if (userExists.length !== 0) {
             console.log(userExists[0].isValid);
             resp = !userExists[0].isValid;

@@ -1,4 +1,4 @@
-module.exports = app => {
+module.exports = (app,authenticateToken) => {
     const companyController = require("../controllers/company.controller.js");
     const articleController = require("../controllers/article.controller.js");
     const favoritesController = require("../controllers/favorites.controller.js");
@@ -7,31 +7,18 @@ module.exports = app => {
     var router = require("express").Router();
 
     //Create a company
-    router.post("/", companyController.create);
+    router.post("/", authenticateToken, companyController.create);
     //Retrieve all Companies
-    router.get("/", companyController.findAll);
+    router.get("/", authenticateToken, companyController.findAll);
     // Retrieve a single company with id
-    router.get("/:id", companyController.findOne);
+    router.get("/:id", authenticateToken, companyController.findOne);
     // Update a company by id
-    router.put("/:id", companyController.update);
+    router.put("/:id", authenticateToken, companyController.update);
     // Delete a company by id
-    router.delete("/:id", companyController.delete);
-
-    //Create a article
-    router.post("/:id/articles", articleController.create);
-    //Retrieve all Articles
-    router.get("/:id/articles", articleController.findByCompany);
-    // Retrieve a single article with id
-    router.get("/:idUser/articles/:idArticle", articleController.findOne);
-    // Update a article by id
-    router.put("/:idUser/articles/:idArticle", articleController.update);
-    // Delete a article by id
-    router.delete("/:idUser/articles/:idArticle", articleController.deleteOne);
+    router.delete("/:id", authenticateToken, companyController.delete);
 
     //Retrieve all Favorites
-    router.get("/:idUser/articles/:idArticle/favorites", favoritesController.findByArticle);
-
-
+    router.get("/:idUser/articles/:idArticle/favorites", authenticateToken, favoritesController.findByArticle);
 
     app.use('/api/companies', router);
   };

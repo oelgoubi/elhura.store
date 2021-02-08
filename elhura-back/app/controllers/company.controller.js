@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const utils = require('../helpers/utils');
 const mail = require('../services/mail');
+const authService = require('../services/auth');
 
 // Create and Save a new Company
 exports.create = (req, res) => {
@@ -28,6 +29,7 @@ exports.create = (req, res) => {
         name : req.body.name,
         siret : req.body.siret,
         documents : req.body.documents,
+        isValid: false,
         validationCode: verifyCode
     });
 
@@ -35,10 +37,9 @@ exports.create = (req, res) => {
     company.save()
         .then(data => {
             // create a token
-            const token = jwt.sign({ id: data.idUser,idRole : data.idRole }, config.ACCESS_TOKEN_SECRET, {
-                expiresIn: 86400 // expires in 24 hours
-            });
 
+            const token = authService.generateRegisterToken(data.idUser, data.idRole);
+            console.log("DATA : "+data)
             let mailConfirmationOptions = mail.mailConfirmationOptions(data.email, verifyCode);
 
             mail.smtpTransport().sendMail(mailConfirmationOptions, function(error, response){

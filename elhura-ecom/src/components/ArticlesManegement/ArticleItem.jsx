@@ -8,6 +8,8 @@ import Typography from '@material-ui/core/Typography';
 import { Avatar, CardHeader, CardMedia, IconButton } from '@material-ui/core';
 import ShareIcon from '@material-ui/icons/Share';
 
+import msi from "../../resources/images/articles/msi.jpg";
+
 const useStyles = makeStyles({
     card:{
         height:'400px',
@@ -42,28 +44,19 @@ const useStyles = makeStyles({
 
 const ArticleItem = (props) => {
     const classes = useStyles();
-    const { avatarUrl, title, description, imageUrl,price } = props;
-
+    //const { avatarUrl, title, description, imageUrl,price } = props;
+    const { designation, idCategory, unitPrice, wholesalePrice, description, avatarUrl} = props;
 
     return (
         <Card className={classes.card}>
-            <CardHeader
-                avatar={
-                    <Avatar src={avatarUrl} />
-                }
-                action={
-                    <IconButton aria-label="settings">
-                        <ShareIcon />
-                    </IconButton>
-                }
-                title={title}
-                subheader={price}
-            />
             <CardMedia
-                style={{height:"150px"}}
-                image={imageUrl}
+                style={{width : "150px", height:"150px"}}
+                image={avatarUrl}
             />
             <CardContent>
+                <Typography variant="body2" component="p">
+                    {designation}
+                </Typography>
                 <Typography variant="body2" component="p">
                     {description}
                 </Typography>
@@ -74,6 +67,6 @@ const ArticleItem = (props) => {
             </CardActions>
         </Card>
     );
-}
+};
 
 export default ArticleItem;

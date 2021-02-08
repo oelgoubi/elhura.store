@@ -22,15 +22,15 @@ exports.create = (req, res) => {
     const client = new Client({
         idUser: req.body.idUser,
         idRole: req.body.idRole,
-        idShipping: req.body.idShipping,
-        idAddress: req.body.idAddress,
-        username: req.body.username,
+        idShipping: null,
+        idAddress: null,
+        username: null,
         password: req.body.password,
         email: req.body.email,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        birthDate: req.body.birthDate,
-        birthPlace: req.body.birthPlace,
+        firstName: null,
+        lastName: null,
+        birthDate: null,
+        birthPlace: null,
         isValid: false,
         validationCode: verifyCode
     });
@@ -39,10 +39,11 @@ exports.create = (req, res) => {
     client.save()
         .then(data => {
              // create a token
+            console.log("MIKE 1")
             const token = authService.generateRegisterToken(data.idUser, data.idRole);
-
+            console.log("MIKE 2")
             let mailConfirmationOptions = mail.mailConfirmationOptions(data.email, verifyCode);
-
+            console.log("MIKE 3")
             mail.smtpTransport().sendMail(mailConfirmationOptions, function(error, response){
                 if(error){
                     console.log(error);
@@ -52,7 +53,7 @@ exports.create = (req, res) => {
                     res.end("sent");
                 }
             });
-
+            console.log("MIKE 4")
             res.cookie('access_token', token, { httpOnly : true, maxAge : 3600*1000 });
             res.cookie('canConfirmRegister', true, { httpOnly : true, maxAge : 2*3600*1000});
             res.clearCookie('canMakeRegisterChoice');
@@ -64,6 +65,7 @@ exports.create = (req, res) => {
                     idRole: data.idRole,
                 } });
         }).catch(err => {
+            console.log("ERROR : "+err)
             res.status(500).send({
                 message: err.message || "Some error occurred while creating the Client."
             });

@@ -1,11 +1,10 @@
 import React from 'react';
+import MainArticles from "../components/ArticlesManegement/MainArticles";
 
 function Products() {
-  return (
-    <div className='products'>
-      <h1>Products</h1>
-    </div>
-  );
+    return (
+        <MainArticles/>
+    );
 }
 
 export default Products;
