@@ -4,12 +4,9 @@ const Op = db.Sequelize.Op;
 const config = require('../config/db.config');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-<<<<<<< HEAD
-=======
 const utils = require('../helpers/utils');
 const mail = require('../services/mail');
 const authService = require('../services/auth');
->>>>>>> 5826316d83ff39062b79eea4ccbaf53e99f4fadf
 
 // Create and Save a new Client
 exports.create = (req, res) => {
@@ -26,17 +23,6 @@ exports.create = (req, res) => {
     const client = new Client({
         idUser: req.body.idUser,
         idRole: req.body.idRole,
-<<<<<<< HEAD
-        idShipping: req.body.idShipping,
-        idAddress: req.body.idAddress,
-        username: req.body.username,
-        password: req.body.password,
-        email: req.body.email,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        birthDate: req.body.birthDate,
-        birthPlace: req.body.birthPlace
-=======
         idShipping: null,
         idAddress: null,
         username: null,
@@ -48,25 +34,12 @@ exports.create = (req, res) => {
         birthPlace: null,
         isValid: false,
         validationCode: verifyCode
->>>>>>> 5826316d83ff39062b79eea4ccbaf53e99f4fadf
     });
 
     // Save Client in the database
     client.save()
         .then(data => {
              // create a token
-<<<<<<< HEAD
-             const token = jwt.sign({ id: data.idUser,idRole : data.idRole }, config.ACCESS_TOKEN_SECRET, {
-                expiresIn: 86400 // expires in 24 hours
-            });
-            res.status(200).send({ auth: true, token,
-            newUser :{
-                username: data.username,
-                email: data.email,
-                idRole: data.idRole,
-            } });
-        }).catch(err => {
-=======
             console.log("MIKE 1")
             const token = authService.generateRegisterToken(data.idUser, data.idRole);
             console.log("MIKE 2")
@@ -94,7 +67,6 @@ exports.create = (req, res) => {
                 } });
         }).catch(err => {
             console.log("ERROR : "+err)
->>>>>>> 5826316d83ff39062b79eea4ccbaf53e99f4fadf
             res.status(500).send({
                 message: err.message || "Some error occurred while creating the Client."
             });

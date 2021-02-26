@@ -13,7 +13,6 @@ const cron = require('node-cron');
 const userService = require('./app/services/user');
 const authService = require('./app/services/auth');
 
-const app = express();
 
 global.__basedir = __dirname;
 

@@ -18,10 +18,7 @@
   "author": "Alexis",
   "license": "ISC",
   "dependencies": {
-<<<<<<< HEAD
-=======
     "axios": "^0.21.1",
->>>>>>> 5826316d83ff39062b79eea4ccbaf53e99f4fadf
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",

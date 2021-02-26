@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-module.exports = (app,authenticateToken)=> {
-=======
 module.exports = (app,authenticateToken) => {
->>>>>>> 5826316d83ff39062b79eea4ccbaf53e99f4fadf
     const tagController = require("../controllers/tag.controller.js");
     const articleTagsController = require("../controllers/article-tags.controller.js");
 

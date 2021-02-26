@@ -1,14 +1,8 @@
-<<<<<<< HEAD
-const db = require("../models");
-const Client = db.Client;
-const Company = db.Company;
-=======
 require('dotenv').config()
 const db = require("../models");
 const Client = db.Client;
 const Company = db.Company;
 const Admin = db.Admin;
->>>>>>> 5826316d83ff39062b79eea4ccbaf53e99f4fadf
 
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
@@ -18,9 +12,7 @@ const clientController = require("./client.controller.js");
 const adminController = require("./admin.controller.js");
 const companyController = require("./company.controller.js");
 
-<<<<<<< HEAD
 
-=======
 const userService = require('../services/user');
 const authService = require('../services/auth');
 
@@ -39,25 +31,18 @@ exports.checkIfUserExists = async (req, res) => {
         userExists : number !== 0
     })
 }
->>>>>>> 5826316d83ff39062b79eea4ccbaf53e99f4fadf
 
 // Register a new User
 exports.register = (req, res) => {
     // Get the important field
     const { idRole } = req.body;
 
-<<<<<<< HEAD
     // Check the validity of the email 
 
-     // Hash the password with bcrypt
-    const hashedPassword = bcrypt.hashSync(req.body.password, 8); 
-    req.body.password = hashedPassword;
-=======
     // Hash the password with bcrypt
     const hashedPassword = bcrypt.hashSync(req.body.password, 8); 
     req.body.password = hashedPassword;
     console.log("MICHAEL : "+idRole)
->>>>>>> 5826316d83ff39062b79eea4ccbaf53e99f4fadf
     switch(idRole)
     {
         case 0:
@@ -73,15 +58,11 @@ exports.register = (req, res) => {
             return res.json({
                 message : 'Server Error'
             })
-<<<<<<< HEAD
 
-=======
->>>>>>> 5826316d83ff39062b79eea4ccbaf53e99f4fadf
     }   
 
 };
 
-<<<<<<< HEAD
 // Authenticate a new User
 exports.login = async (req, res) => {
     let user;
@@ -133,7 +114,6 @@ exports.isAuthenticated = (req, res) => {
    
 };
 
-=======
 exports.validate = (req, res) => {
     const access_token = req.cookies.access_token;
     const code = req.body.code;
@@ -321,4 +301,3 @@ exports.canConfirmRegister = async (req, res) => {
         flag : resp
     })
 };
->>>>>>> 5826316d83ff39062b79eea4ccbaf53e99f4fadf

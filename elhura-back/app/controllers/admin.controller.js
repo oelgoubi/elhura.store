@@ -3,12 +3,9 @@ const Admin = db.Admin;
 const Op = db.Sequelize.Op;
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-<<<<<<< HEAD
-=======
 const utils = require('../helpers/utils');
 const mail = require('../services/mail');
 const authService = require('../services/auth');
->>>>>>> 5826316d83ff39062b79eea4ccbaf53e99f4fadf
 
 // Create and Save a new Admin
 exports.create = (req, res) => {
@@ -40,17 +37,6 @@ exports.create = (req, res) => {
     admin.save()
         .then(data => {
             // create a token
-<<<<<<< HEAD
-            const token = jwt.sign({ id: data.idUser,idRole : data.idRole }, config.ACCESS_TOKEN_SECRET, {
-                expiresIn: 86400 // expires in 24 hours
-            });
-            res.status(200).send({ auth: true, token,
-            newUser :{
-                username: data.username,
-                email: data.email,
-                idRole: data.idRole,
-            } });
-=======
             const token = authService.generateRegisterToken(data.idUser, data.idRole);
 
             let mailConfirmationOptions = mail.mailConfirmationOptions(data.email, verifyCode);
@@ -75,7 +61,6 @@ exports.create = (req, res) => {
                     email: data.email,
                     idRole: data.idRole,
                 } });
->>>>>>> 5826316d83ff39062b79eea4ccbaf53e99f4fadf
         }).catch(err => {
         res.status(500).send({
             message: err.message || "Some error occurred while creating the Admin."
