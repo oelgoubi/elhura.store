@@ -1,8 +1,11 @@
-import React,{ useRef,useEffect } from 'react'
+import React,{ useRef,useEffect } from 'react'; 
+
+
 
 function Paypal() {
 
-    const paypal = useRef()
+    const paypal = useRef();
+   
 
     useEffect(() => {
        window.paypal.Buttons({
