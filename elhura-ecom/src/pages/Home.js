@@ -3,7 +3,7 @@ import ArticleList from '../components/ArticlesManegement/ArticleList'
 
 function Home() {
   return (
-    <div className='homy'>
+    <div className='home'>
       <ArticleList />
     </div>
   );

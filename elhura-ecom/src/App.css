@@ -12,7 +12,10 @@
   margin-left: 100px;
 }
 .reports,
-.products {
+.products,
+.error404,
+.register_confirm,
+.register_choices {
   display: flex;
   height: 90vh;
   align-items: center;

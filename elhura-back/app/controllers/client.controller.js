@@ -4,6 +4,12 @@ const Op = db.Sequelize.Op;
 const config = require('../config/db.config');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+<<<<<<< HEAD
+=======
+const utils = require('../helpers/utils');
+const mail = require('../services/mail');
+const authService = require('../services/auth');
+>>>>>>> 5826316d83ff39062b79eea4ccbaf53e99f4fadf
 
 // Create and Save a new Client
 exports.create = (req, res) => {
@@ -15,9 +21,12 @@ exports.create = (req, res) => {
         });
     }
 
+    let verifyCode = utils.getRandomCode();
+
     const client = new Client({
         idUser: req.body.idUser,
         idRole: req.body.idRole,
+<<<<<<< HEAD
         idShipping: req.body.idShipping,
         idAddress: req.body.idAddress,
         username: req.body.username,
@@ -27,12 +36,26 @@ exports.create = (req, res) => {
         lastName: req.body.lastName,
         birthDate: req.body.birthDate,
         birthPlace: req.body.birthPlace
+=======
+        idShipping: null,
+        idAddress: null,
+        username: null,
+        password: req.body.password,
+        email: req.body.email,
+        firstName: null,
+        lastName: null,
+        birthDate: null,
+        birthPlace: null,
+        isValid: false,
+        validationCode: verifyCode
+>>>>>>> 5826316d83ff39062b79eea4ccbaf53e99f4fadf
     });
 
     // Save Client in the database
     client.save()
         .then(data => {
              // create a token
+<<<<<<< HEAD
              const token = jwt.sign({ id: data.idUser,idRole : data.idRole }, config.ACCESS_TOKEN_SECRET, {
                 expiresIn: 86400 // expires in 24 hours
             });
@@ -43,6 +66,35 @@ exports.create = (req, res) => {
                 idRole: data.idRole,
             } });
         }).catch(err => {
+=======
+            console.log("MIKE 1")
+            const token = authService.generateRegisterToken(data.idUser, data.idRole);
+            console.log("MIKE 2")
+            let mailConfirmationOptions = mail.mailConfirmationOptions(data.email, verifyCode);
+            console.log("MIKE 3")
+            mail.smtpTransport().sendMail(mailConfirmationOptions, function(error, response){
+                if(error){
+                    console.log(error);
+                    res.end("error");
+                }else{
+                    console.log("Message sent: " + response.message);
+                    res.end("sent");
+                }
+            });
+            console.log("MIKE 4")
+            res.cookie('access_token', token, { httpOnly : true, maxAge : 3600*1000 });
+            res.cookie('canConfirmRegister', true, { httpOnly : true, maxAge : 2*3600*1000});
+            res.clearCookie('canMakeRegisterChoice');
+
+            res.send({ auth: true,
+                newUser :{
+                    username: data.username,
+                    email: data.email,
+                    idRole: data.idRole,
+                } });
+        }).catch(err => {
+            console.log("ERROR : "+err)
+>>>>>>> 5826316d83ff39062b79eea4ccbaf53e99f4fadf
             res.status(500).send({
                 message: err.message || "Some error occurred while creating the Client."
             });

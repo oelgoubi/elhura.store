@@ -4,6 +4,12 @@ const Op = db.Sequelize.Op;
 const config = require('../config/db.config');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+<<<<<<< HEAD
+=======
+const utils = require('../helpers/utils');
+const mail = require('../services/mail');
+const authService = require('../services/auth');
+>>>>>>> 5826316d83ff39062b79eea4ccbaf53e99f4fadf
 
 // Create and Save a new Company
 exports.create = (req, res) => {
@@ -14,6 +20,8 @@ exports.create = (req, res) => {
         });
     }
 
+    let verifyCode = utils.getRandomCode();
+
     const company = new Company({
         idUser : req.body.idUser,
         idRole : req.body.idRole,
@@ -23,13 +31,16 @@ exports.create = (req, res) => {
         email : req.body.email,
         name : req.body.name,
         siret : req.body.siret,
-        documents : req.body.documents
+        documents : req.body.documents,
+        isValid: false,
+        validationCode: verifyCode
     });
 
     // Save Company in the database
     company.save()
         .then(data => {
             // create a token
+<<<<<<< HEAD
             const token = jwt.sign({ id: data.idUser,idRole : data.idRole }, config.ACCESS_TOKEN_SECRET, {
                 expiresIn: 86400 // expires in 24 hours
             });
@@ -39,6 +50,33 @@ exports.create = (req, res) => {
                 email: data.email,
                 idRole: data.idRole,
             } });
+=======
+
+            const token = authService.generateRegisterToken(data.idUser, data.idRole);
+            console.log("DATA : "+data)
+            let mailConfirmationOptions = mail.mailConfirmationOptions(data.email, verifyCode);
+
+            mail.smtpTransport().sendMail(mailConfirmationOptions, function(error, response){
+                if(error){
+                    console.log(error);
+                    res.end("error");
+                }else{
+                    console.log("Message sent: " + response.message);
+                    res.end("sent");
+                }
+            });
+
+            res.cookie('access_token', token, { httpOnly : true, maxAge : 3600*1000 });
+            res.cookie('canConfirmRegister', true, { httpOnly : true, maxAge : 2*3600*1000});
+            res.clearCookie('canMakeRegisterChoice');
+
+            res.status(200).send({ auth: true,
+                newUser :{
+                    username: data.username,
+                    email: data.email,
+                    idRole: data.idRole,
+                } });
+>>>>>>> 5826316d83ff39062b79eea4ccbaf53e99f4fadf
 
         }).catch(err => {
         res.status(500).send({
