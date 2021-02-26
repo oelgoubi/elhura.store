@@ -3,6 +3,9 @@ const Admin = db.Admin;
 const Op = db.Sequelize.Op;
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const utils = require('../helpers/utils');
+const mail = require('../services/mail');
+const authService = require('../services/auth');
 
 // Create and Save a new Admin
 exports.create = (req, res) => {
@@ -12,6 +15,8 @@ exports.create = (req, res) => {
             message: "Admin id can not be empty"
         });
     }
+
+    let verifyCode = utils.getRandomCode();
 
     const admin = new Admin({
         idUser : req.body.idUser,
@@ -23,22 +28,39 @@ exports.create = (req, res) => {
         firstName : req.body.firstName,
         lastName : req.body.lastName,
         birthDate : req.body.birthDate,
-        birthPlace : req.body.birthPlace
+        birthPlace : req.body.birthPlace,
+        isValid: false,
+        validationCode: verifyCode
     });
 
     // Save Admin in the database
     admin.save()
         .then(data => {
             // create a token
-            const token = jwt.sign({ id: data.idUser,idRole : data.idRole }, config.ACCESS_TOKEN_SECRET, {
-                expiresIn: 86400 // expires in 24 hours
+            const token = authService.generateRegisterToken(data.idUser, data.idRole);
+
+            let mailConfirmationOptions = mail.mailConfirmationOptions(data.email, verifyCode);
+
+            mail.smtpTransport().sendMail(mailConfirmationOptions, function(error, response){
+                if(error){
+                    console.log(error);
+                    res.end("error");
+                }else{
+                    console.log("Message sent: " + response.message);
+                    res.end("sent");
+                }
             });
-            res.status(200).send({ auth: true, token,
-            newUser :{
-                username: data.username,
-                email: data.email,
-                idRole: data.idRole,
-            } });
+
+            res.cookie('access_token', token, { httpOnly : true, maxAge : 3600*1000 });
+            res.cookie('canConfirmRegister', true, { httpOnly : true, maxAge : 2*3600*1000});
+            res.clearCookie('canMakeRegisterChoice');
+
+            res.status(200).send({ auth: true,
+                newUser :{
+                    username: data.username,
+                    email: data.email,
+                    idRole: data.idRole,
+                } });
         }).catch(err => {
         res.status(500).send({
             message: err.message || "Some error occurred while creating the Admin."

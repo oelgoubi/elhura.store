@@ -4,15 +4,15 @@ module.exports = (app,authenticateToken) => {
     var router = require("express").Router();
 
     //Create a category
-    router.post("/", categoryController.create);
+    router.post("/", authenticateToken, categoryController.create);
     //Retrieve all Clients
-    router.get("/", categoryController.findAll);
+    router.get("/", authenticateToken, categoryController.findAll);
     // Retrieve a single category with id
-    router.get("/:id", categoryController.findOne);
+    router.get("/:id", authenticateToken, categoryController.findOne);
     // Update a category by id
-    router.put("/:id", categoryController.update);
+    router.put("/:id", authenticateToken, categoryController.update);
     // Delete a category by id
-    router.delete("/:id", categoryController.delete);
+    router.delete("/:id", authenticateToken, categoryController.delete);
 
     app.use('/api/categories', authenticateToken,router);
   };

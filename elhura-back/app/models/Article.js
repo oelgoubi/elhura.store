@@ -35,6 +35,14 @@ module.exports = function(sequelize, DataTypes) {
     wholesalePrice: {
       type: DataTypes.DECIMAL(8,0),
       allowNull: true
+    },
+    avatarUrl: {
+      type: DataTypes.STRING(254),
+      allowNull: true
+    },
+    description: {
+      type: DataTypes.STRING(254),
+      allowNull: true
     }
   }, {
     sequelize,

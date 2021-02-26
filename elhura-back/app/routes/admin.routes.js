@@ -4,15 +4,15 @@ module.exports = (app,authenticateToken) => {
     var router = require("express").Router();
 
     //Create a admin
-    router.post("/", adminController.create);
+    router.post("/", authenticateToken, adminController.create);
     //Retrieve all Admins
-    router.get("/", adminController.findAll);
+    router.get("/", authenticateToken, adminController.findAll);
     // Retrieve a single admin with id
-    router.get("/:id", adminController.findOne);
+    router.get("/:id", authenticateToken, adminController.findOne);
     // Update a admin by id
-    router.put("/:id", adminController.update);
+    router.put("/:id", authenticateToken, adminController.update);
     // Delete a admin by id
-    router.delete("/:id", adminController.delete);
+    router.delete("/:id", authenticateToken, adminController.delete);
 
     app.use('/api/admins',authenticateToken, router);
   };

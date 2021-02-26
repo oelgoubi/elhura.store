@@ -7,7 +7,6 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Paper from "@material-ui/core/Paper";
 import Avatar from "@material-ui/core/Avatar";
 import { FormControl, Input, InputLabel, Button } from "@material-ui/core";
-import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
 import Snackbar from "@material-ui/core/Snackbar";
 import SnackbarContent from "@material-ui/core/SnackbarContent";
 import IconButton from "@material-ui/core/IconButton";
@@ -15,6 +14,12 @@ import ErrorIcon from "@material-ui/icons/Error";
 import VisibilityTwoToneIcon from "@material-ui/icons/VisibilityTwoTone";
 import VisibilityOffTwoToneIcon from "@material-ui/icons/VisibilityOffTwoTone";
 import CloseIcon from "@material-ui/icons/Close";
+import logo from "../../../resources/images/logo.jpg";
+import {createBrowserHistory} from 'history';
+
+const authService = require('../../../services/auth');
+
+export const history = createBrowserHistory({forceRefresh:true})
 
 class LogInForm extends Component {
   state = {
@@ -37,7 +42,6 @@ class LogInForm extends Component {
     });
   };
 
-
   showPassword = () => {
     this.setState(prevState => ({ hidePassword: !prevState.hidePassword }));
   };
@@ -48,19 +52,21 @@ class LogInForm extends Component {
     }
     return true;
   };
-  submitRegistration = e => {
+
+  submitRegistration = async (e) => {
     e.preventDefault();
+
+    const login = await authService.login(this.state.email, this.state.password);
+
+    console.log("EMAIL : "+login)
+    if (login === false) {
       this.setState({
         errorOpen: true,
-        error: "Passwords don't match"
+        error: "Username or password invalid"
       });
-    
-    const UserCredentials = {
-      email: this.state.email,
-      password: this.state.password,
-    };
-    console.log("this.props.UserCredentials", UserCredentials);
-    //dispath to userActions
+    } else{
+      history.push('/');
+    }
   };
 
   render() {
@@ -70,12 +76,12 @@ class LogInForm extends Component {
         <CssBaseline />
 
         <Paper className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <PeopleAltIcon className={classes.icon} />
-          </Avatar>
+          {<Avatar className={classes.avatar}>
+            <img className={classes.logo} src={logo} alt="Logo" />
+          </Avatar>}
           <form
             className={classes.form}
-            onSubmit={() => this.submitRegistration}
+            onSubmit={this.submitRegistration}
           >
             <FormControl required fullWidth margin="normal">
               <InputLabel htmlFor="email" className={classes.labels}>
@@ -124,7 +130,6 @@ class LogInForm extends Component {
               />
             </FormControl>
             <Button
-              disabled={!this.isValid()}
               disableRipple
               fullWidth
               variant="outlined"

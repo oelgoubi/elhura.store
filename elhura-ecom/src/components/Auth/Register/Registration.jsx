@@ -1,4 +1,5 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
+import { withRouter } from 'react-router-dom';
 import { withStyles } from "@material-ui/core/styles";
 import { register } from "./Styles/RegistrationStyles";
 
@@ -11,11 +12,12 @@ import IconButton from "@material-ui/core/IconButton";
 import ErrorIcon from "@material-ui/icons/Error";
 import CloseIcon from "@material-ui/icons/Close";
 import RegistrationForm from "./Forms/RegistrationForm";
-import ButtonsAs from "./Forms/ButtonsAs";
-import RegistrationFormCustomer from "./Forms/RegistrationFormCustomer";
-import RegistrationFormCompany from "./Forms/RegistrationFormCompany";
 import logo from "../../../resources/images/logo.jpg";
 import { Grid } from "@material-ui/core";
+import axios from "axios";
+
+require('dotenv').config()
+const authService = require('../../../services/auth');
 
 class Registration extends Component {
   state = {
@@ -40,8 +42,21 @@ class Registration extends Component {
     country: ""
   };
 
-  componentDidMount() {
-  }
+  async componentDidMount() {
+    const response = await axios({
+      method: 'GET',
+      url: '/api/email'
+    });
+
+    /*let email = response.data.email;
+    if (email === ""){
+      email = cookies.get('email');
+    }*/
+
+    this.setState({
+      email: response.data.email ?? ""
+    });
+  };
 
   errorClose = e => {
     this.setState({
@@ -73,50 +88,57 @@ class Registration extends Component {
       return true;
     }
     return false;
-  }
-
-  submitRegistration = e => {
-    e.preventDefault();
-    if (!this.isEmailValid()) {
-      this.setState({
-        errorOpen: true,
-        error: "Invalid email"
-      });
-    }else{
-      if (!this.passwordMatch()) {
-        this.setState({
-          errorOpen: true,
-          error: "Passwords don't match"
-        });
-      }else{
-        const newUserCredentials = {
-          email: this.state.email,
-          password: this.state.password,
-          passwordConfirm: this.state.passwordConfirm,
-          showSignUpChoices: true
-        };
-        this.setState(newUserCredentials);
-        console.log("this.props.newUserCredentials", newUserCredentials);
-      }
-    }
-    //dispath to userActions
   };
 
-  completeRegistration =  e => {
+  submitRegistration = async (e) => {
     e.preventDefault();
-    this.setState({
-      error: null
-    });
-    console.log(this.state);
-  }
 
-  loadDetailsRegistrationForm = choices => e => {
-    // Here we request the back end to insert data (email, password) in db
-    // We only update the state of the component if we have received a response from the back
-    this.setState({
-      signUpChoices:choices
+    const response = await axios.post('/api/auth/check', {
+      email: this.state.email
     });
-  }
+
+    if (response.data.userExists === true) {
+      this.setState({
+        errorOpen: true,
+        error: "Email address not available"
+      });
+    } else {
+      if (!this.isEmailValid()) {
+        this.setState({
+          errorOpen: true,
+          error: "Invalid email"
+        });
+      }else{
+        if (!this.passwordMatch()) {
+          this.setState({
+            errorOpen: true,
+            error: "Passwords don't match"
+          });
+        }else{
+          const newUserCredentials = {
+            email: this.state.email,
+            password: this.state.password,
+            passwordConfirm: this.state.passwordConfirm,
+            showSignUpChoices: true
+          };
+          this.setState(newUserCredentials);
+
+          const canMakeRegisterChoice = await authService.canMakeRegisterChoice();
+
+          this.props.app.setState({
+            canMakeRegisterChoice: canMakeRegisterChoice,
+            canConfirmRegister: false,
+          })
+
+          this.props.history.push('/register/choices', {
+            email: this.state.email,
+            password: this.state.password,
+            passwordConfirm: this.state.passwordConfirm
+          });
+        }
+      }
+    }
+  };
 
   render() {
     const { classes } = this.props;
@@ -133,16 +155,7 @@ class Registration extends Component {
                   className={classes.form}
                   onSubmit={() => this.submitRegistration}
               >
-                {
-                  !this.state.showSignUpChoices ?
-                      <RegistrationForm registration={this}/>
-                      :
-                      <React.Fragment>
-                        {(this.state.signUpChoices.customer && !this.state.signUpChoices.company) ? <RegistrationFormCustomer registration={this}/> : null}
-                        {(!this.state.signUpChoices.customer && this.state.signUpChoices.company) ? <RegistrationFormCompany registration={this}/> : null}
-                        {(!this.state.signUpChoices.customer && !this.state.signUpChoices.company) ? <ButtonsAs registration={this}/> : null}
-                      </React.Fragment>
-                }
+                <RegistrationForm registration={this}/>
               </form>
               {this.state.error ? (
                   <Snackbar
@@ -185,4 +198,4 @@ class Registration extends Component {
   }
 }
 
-export default withStyles(register)(Registration);
+export default withRouter(withStyles(register)(Registration));

@@ -5,7 +5,7 @@ import React,{ useRef,useEffect } from 'react';
 function Paypal() {
 
     const paypal = useRef();
-   
+    
 
     useEffect(() => {
        window.paypal.Buttons({
@@ -17,8 +17,8 @@ function Paypal() {
                             description: "computer asus",
                             amount:{
                                 currency_code:"EUR",
-                                value: 650.00
-                            }
+                                value: 30.11,
+                            },
                         }
                     ]
                 })
@@ -26,9 +26,12 @@ function Paypal() {
             onApprove: async (data,actions)=>{
                 const order = await actions.order.capture();
                 console.log(order);
+
+                // Redirection vers la page de commande
             },
             onError: (err)=>{
-                console.log(err)
+                console.log(err);
+                // Rediriger vers une page d'erreur
             }
        }).render(paypal.current)
     }, [])

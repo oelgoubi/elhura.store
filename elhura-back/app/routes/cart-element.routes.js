@@ -4,15 +4,15 @@ module.exports = (app,authenticateToken) => {
     var router = require("express").Router();
 
     //Create a cartElement
-    router.post("/", cartElementController.create);
+    router.post("/", authenticateToken, cartElementController.create);
     //Retrieve all Clients
-    router.get("/", cartElementController.findAll);
+    router.get("/", authenticateToken, cartElementController.findAll);
     // Retrieve a single cartElement with id
-    router.get("/:id", cartElementController.findOne);
+    router.get("/:id", authenticateToken, cartElementController.findOne);
     // Update a cartElement by id
-    router.put("/:id", cartElementController.update);
+    router.put("/:id", authenticateToken, cartElementController.update);
     // Delete a cartElement by id
-    router.delete("/:id", cartElementController.delete);
+    router.delete("/:id", authenticateToken, cartElementController.delete);
 
     app.use('/api/cart-elements',authenticateToken, router);
   };

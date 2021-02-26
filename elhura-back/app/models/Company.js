@@ -39,6 +39,15 @@ module.exports = function(sequelize, DataTypes) {
     documents: {
       type: DataTypes.DATE,
       allowNull: true
+    },
+    isValid: {
+      type: Sequelize.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
+    validationCode: {
+      type: DataTypes.STRING(6),
+      allowNull: true
     }
   }, {
     sequelize,

@@ -2,10 +2,10 @@
 import React from 'react';
 import Registration from '../components/Auth/Register/Registration'
 
-function Register() {
+function Register(props) {
   return (
     <div className='register'>
-        <Registration />
+        <Registration app={props.app}/>
     </div>
   );
 }
