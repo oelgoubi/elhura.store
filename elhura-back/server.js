@@ -29,6 +29,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 
+app.use(express.static('public'));
+
 //sequelize
 const db = require("./app/models");
 db.sequelize.sync();
@@ -39,8 +41,9 @@ cron.schedule("0 0 */2 * * *", async () => {
 });
 
 // simple route
-app.get("/", (req, res) => {
-  res.json({ message: "Welcome to Elhura" });
+app.get("/api/images", (req, res) => {
+  //res.json({ message: "Welcome to Elhura" });
+  //res.send(ignimission)
 });
 
 function authenticateToken(req,res,next){

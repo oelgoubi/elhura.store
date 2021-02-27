@@ -6,7 +6,8 @@ module.exports = function(sequelize, DataTypes) {
     idArticle: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     idCategory: {
       type: DataTypes.INTEGER,

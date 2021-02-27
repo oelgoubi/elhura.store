@@ -5,6 +5,7 @@ import * as IoIcons from 'react-icons/io';
 
 export const SidebarData = [
   {
+    id: 'home',
     title: 'Home',
     path: '/',
     icon: <AiIcons.AiFillHome />,
@@ -16,6 +17,7 @@ export const SidebarData = [
     showToUser: [-1]
   },
   {
+    id: 'reports',
     title: 'Reports',
     path: '/reports',
     icon: <IoIcons.IoIosPaper />,
@@ -27,6 +29,7 @@ export const SidebarData = [
     showToUser: [2]
   },
   {
+    id: 'products',
     title: 'Products',
     path: '/products',
     icon: <FaIcons.FaCartPlus />,
@@ -38,6 +41,7 @@ export const SidebarData = [
     showToUser: [2]
   },
   {
+    id: 'team',
     title: 'Team',
     path: '/team',
     icon: <IoIcons.IoMdPeople />,
@@ -49,6 +53,7 @@ export const SidebarData = [
     showToUser: [2]
   },
   {
+    id: 'messages',
     title: 'Messages',
     path: '/messages',
     icon: <FaIcons.FaEnvelopeOpenText />,
@@ -60,7 +65,8 @@ export const SidebarData = [
     showToUser: [1,2]
   },
   {
-    title: 'Créer un Compte',
+    id: 'register',
+    title: 'Register',
     path: '/register',
     icon: <AiIcons.AiOutlineUserAdd />,
     cName: 'nav-text',
@@ -71,7 +77,8 @@ export const SidebarData = [
     showToUser: [-1]
   },
   {
-    title: 'Se Connecter',
+    id: 'login',
+    title: 'Login',
     path: '/login',
     icon: <AiIcons.AiOutlineLogin />,
     cName: 'nav-text',
@@ -82,6 +89,7 @@ export const SidebarData = [
     showToUser: [-1]
   },
   {
+    id: 'support',
     title: 'Support',
     path: '/support',
     icon: <IoIcons.IoMdHelpCircle />,
@@ -93,7 +101,8 @@ export const SidebarData = [
     showToUser: [-1]
   },
   {
-    title: 'Se Déconnecter',
+    id: 'logout',
+    title: 'Logout',
     path: '/logout',
     icon: <AiIcons.AiOutlineLogout />,
     cName: 'nav-text',

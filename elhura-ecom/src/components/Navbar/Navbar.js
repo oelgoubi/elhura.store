@@ -11,21 +11,9 @@ import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 import {createBrowserHistory} from 'history';
 import {AppBar, Button, FormControl, Input, InputLabel, Toolbar} from "@material-ui/core";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Paper from "@material-ui/core/Paper";
-import Avatar from "@material-ui/core/Avatar";
-import logo from "../../resources/images/logo.jpg";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import VisibilityOffTwoToneIcon from "@material-ui/icons/VisibilityOffTwoTone";
-import VisibilityTwoToneIcon from "@material-ui/icons/VisibilityTwoTone";
-import Snackbar from "@material-ui/core/Snackbar";
-import SnackbarContent from "@material-ui/core/SnackbarContent";
-import ErrorIcon from "@material-ui/icons/Error";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
 
 const authService = require('../../services/auth');
-const userService = require('../../services/user');
+const navbarService = require('../../services/navbar');
 
 export const history = createBrowserHistory({forceRefresh:true});
 
@@ -37,6 +25,7 @@ class Navbar extends Component {
       sidebar : false,
       anchorEl : null
     };
+    this.logout = this.logout.bind(this);
   }
 
   handleUserCircleClick = (event) => {
@@ -58,21 +47,31 @@ class Navbar extends Component {
   }
 
   componentDidMount() {
-
+    /*if(this.props.app.state.path !== "/products") {
+      this.props.app.setState({
+        path : null
+      })
+    }*/
   }
 
   async logout() {
     await authService.logout();
-    history.push("/");
+    console.log("USER ROLE : "+this.props.app.state.userRole)
+    this.props.app.setState({
+      isAuthenticated: null,
+      userRole: -1
+    });
+    console.log("USER ROLE : "+this.props.app.state.userRole)
+    //history.push("/");
   }
 
   menuItems() {
     let sideBarData = SidebarData
-    if (this.props.isAuthenticated !== null && this.props.isAuthenticated) {
-      sideBarData = sideBarData.filter(item => (item.show.authenticated === true && (item.showToUser.includes(this.props.userRole) || item.showToUser.includes(-1))))
-    } else if (this.props.isAuthenticated !== null && !this.props.isAuthenticated) {
+    if (this.props.app.state.isAuthenticated !== null && this.props.app.state.isAuthenticated) {
+      sideBarData = sideBarData.filter(item => (item.show.authenticated === true && (item.showToUser.includes(this.props.app.state.userRole) || item.showToUser.includes(-1))))
+    } else if (this.props.app.state.isAuthenticated !== null && !this.props.app.state.isAuthenticated) {
       sideBarData = sideBarData.filter(item => item.show.unauthenticated === true)
-    } else if(this.props.isAuthenticated === null) {
+    } else if(this.props.app.state.isAuthenticated === null) {
       sideBarData = sideBarData.filter(item => item.show.unauthenticated === true)
     }
     return sideBarData.map((item, index) => {
@@ -89,6 +88,7 @@ class Navbar extends Component {
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
     const { classes } = this.props;
+    const showMenuBarOnRoutes = navbarService.showMenuBarOnRoutes().filter(item => item.path === this.props.app.state.path);
     return (
         <>
           <IconContext.Provider value={{ color: '#fff' }}>
@@ -96,20 +96,15 @@ class Navbar extends Component {
               <Link to='#' className='menu-bars'>
                 <FaIcons.FaBars onClick={this.showSidebar} />
               </Link>
-              {(this.props.isAuthenticated !== null && this.props.userRole === 2) && (<div>
+              {(this.props.app.state.isAuthenticated !== null && this.props.app.state.userRole === 2 && showMenuBarOnRoutes.length !== 0) && (<div>
                 <AppBar className={classes.appBar} position="static">
                   <Toolbar>
                     <Typography className={classes.name} variant="h6">
                       Elhura
                     </Typography>
-                    <Link to={"/articles"} className={classes.link}>
+                    <Link to={"/products"} className={classes.link}>
                       <Typography variant="body2">
                         Articles
-                      </Typography>
-                    </Link>
-                    <Link to={"/categories"} className={classes.link}>
-                      <Typography variant="body2">
-                        Categories
                       </Typography>
                     </Link>
                     <Link to={"/articles/add"} className={classes.link}>
@@ -117,10 +112,15 @@ class Navbar extends Component {
                         Add
                       </Typography>
                     </Link>
+                    <Link to={"/articles/edit"} className={classes.link}>
+                      <Typography variant="body2">
+                        Edit
+                      </Typography>
+                    </Link>
                   </Toolbar>
                 </AppBar>
               </div>)}
-              { this.props.isAuthenticated != null && (this.props.isAuthenticated === true &&
+              { this.props.app.state.isAuthenticated != null && (this.props.app.state.isAuthenticated === true &&
                 <div>
                   <Link to='#' className='avatar'>
                     <FaIcons.FaUserCircle aria-describedby="user-circle-popover" onClick={this.handleUserCircleClick}/>

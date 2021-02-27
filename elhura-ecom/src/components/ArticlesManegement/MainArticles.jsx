@@ -3,6 +3,7 @@ import {AppBar, Toolbar, withStyles } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import {Link, withRouter} from "react-router-dom";
 import {mainArticles} from "./Styles/ArticlesStyles";
+import ArticleList from "./ArticleList";
 
 class MainArticles extends Component {
     constructor(props) {
@@ -10,10 +11,10 @@ class MainArticles extends Component {
     }
 
     render() {
-        const { classes } = this.props
+        const { classes, app } = this.props
         return (
             <div>
-
+                <ArticleList classes={classes} app={app}/>
             </div>
         );
     }

@@ -6,26 +6,49 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { toolbox } from "./Styles/ToolboxStyles";
-import {withStyles} from "@material-ui/core";
+import {Grid, withStyles} from "@material-ui/core";
 import {file} from "../Files/Styles/FileStyles";
+import ArticleItem from "../ArticlesManegement/ArticleItem";
+
+const articleService = require('../../services/article');
+const helpers = require('../../utils/helpers');
 
 class SimpleSelect extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            age: ''
+            categories: null
         }
+        this.fetchCategories = this.fetchCategories.bind(this);
+    }
+
+    componentDidMount() {
+        this.fetchCategories()
     }
 
     handleChange = (event) => {
-        this.setState({
-            age: event.target.value
+        this.props.addArticleComponent.setState({
+            category: event.target.value
         })
     };
 
+    getCategories = (item) => {
+        return (
+            <MenuItem value={item.idCategory}>{item.nameCategory}</MenuItem>
+        );
+    }
+
+    async fetchCategories() {
+        const categories = await articleService.listCategories();
+
+        this.setState({
+            categories
+        })
+    }
+
     render() {
-        const { classes } = this.props
-        const { age } = this.state
+        const { classes, app } = this.props
+        const { category, categories } = this.state
         return (
             <div className={classes.dropdown}>
                 <FormControl className={classes.formControl}>
@@ -34,12 +57,11 @@ class SimpleSelect extends Component {
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         className={classes.selectValue}
-                        value={age}
+                        value={category}
+                        defaultValue={app.state.articleBeingEdited ? app.state.articleBeingEdited.idCategory : null}
                         onChange={this.handleChange}
                     >
-                        <MenuItem value={10}>Ten</MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
-                        <MenuItem value={30}>Thirty</MenuItem>
+                        { categories && categories.sort((item1, item2) => helpers.compareStrings(item1.nameCategory, item2.nameCategory)).map(item => this.getCategories(item)) }
                     </Select>
                 </FormControl>
             </div>

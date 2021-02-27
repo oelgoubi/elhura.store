@@ -1,36 +1,52 @@
+require('dotenv').config()
+
 const db = require("../models");
 const Article = db.Article;
+const Client = db.Client;
+const Company = db.Company;
 const Op = db.Sequelize.Op;
 
 // Create and Save a new Article
-exports.create = (req, res) => {
-    // Validate request
-    if(!req.body.idArticle) {
+exports.create = async (req, res) => {
+    const email = req.cookies.email;
+
+    const company = await Company.findAll({
+                        where: {
+                            email: email
+                        }
+                    })
+
+    console.log("EMAIL : ")
+    console.log(company[0].email)
+
+    if (company) {
+        const article = new Article({
+            idUser : company[0].idUser,
+            idCategory : req.body.idCategory,
+            designation : req.body.designation,
+            unitPrice : req.body.unitPrice,
+            wholesalePrice : req.body.wholesalePrice,
+            avatarUrl : process.env.APP_URL+"/api/files/"+req.body.avatarName,
+            description : req.body.description
+        });
+
+        try{
+            // Save Article in the database
+            const response = await article.save()
+            res.send(response.data);
+        }catch(err){
+            console.log("ERROR : ")
+            console.log(err.message)
+                res.status(500).send({
+                message: err.message || "Some error occurred while creating the Article."
+            });
+        }
+    } else{
+        // Validate request
         return res.status(400).send({
             message: "Article id can not be empty"
         });
     }
-
-    const article = new Article({
-        idArticle : req.body.idArticle,
-        idUser : req.params.id,
-        idCategory : req.body.idCategory,
-        designation : req.body.designation,
-        unitPrice : req.body.unitPrice,
-        wholesalePrice : req.body.wholesalePrice,
-        avatarUrl : req.body.avatarUrl,
-        description : req.body.description
-    });
-
-    // Save Article in the database
-    article.save()
-        .then(data => {
-            res.send(data);
-        }).catch(err => {
-        res.status(500).send({
-            message: err.message || "Some error occurred while creating the Article."
-        });
-    });
 };
 
 // Retrieve all Articles from the database.

@@ -22,8 +22,8 @@ const BorderLinearProgress = withStyles((theme) => ({
 }))(LinearProgress);
 
 class FileUpload extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         this.state = {
             selectedFiles: undefined,
@@ -50,11 +50,12 @@ class FileUpload extends Component {
         }
     }
 
-    selectFile(event) {
+    async selectFile(event) {
         console.log(event.target.files)
-        this.setState({
+        await this.setState({
             selectedFiles: event.target.files
         })
+        this.upload()
     }
 
     async upload() {
@@ -94,6 +95,10 @@ class FileUpload extends Component {
         this.setState({
             selectedFiles: undefined,
         });
+
+        this.props.addArticleComponent.setState({
+            avatarName: currentFile.name
+        })
     }
 
     render() {
@@ -134,7 +139,7 @@ class FileUpload extends Component {
                 <div className="file-name">
                     {selectedFiles && selectedFiles.length > 0 ? selectedFiles[0].name : null}
                 </div>
-                <Button
+                {/*<Button
                     className={classes.upload}
                     color="primary"
                     variant="contained"
@@ -142,7 +147,7 @@ class FileUpload extends Component {
                     disabled={!selectedFiles}
                     onClick={this.upload}>
                     Upload
-                </Button>
+                </Button>*/}
 
                 <Typography variant="subtitle2" className={`upload-message ${isError ? "error" : ""}`}>
                     {message}

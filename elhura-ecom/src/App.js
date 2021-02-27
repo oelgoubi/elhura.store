@@ -12,6 +12,8 @@ import RegisterChoices from './pages/RegisterChoices';
 import LogIn from './pages/LogIn';
 import FileUpload from "./components/Files/FileUpload";
 import AddArticle from "./components/ArticlesManegement/AddArticle";
+import EditArticle from "./components/ArticlesManegement/EditArticle";
+
 const authService = require('./services/auth');
 const userService = require('./services/user');
 const articleService = require('./services/article');
@@ -23,7 +25,9 @@ class App extends Component {
       canMakeRegisterChoice: null,
       canConfirmRegister: null,
       isAuthenticated: null,
-      userRole: -1
+      userRole: -1,
+      path: null,
+      articleBeingEdited: null
     };
     this.passToNextSteps = this.passToNextSteps.bind(this);
     this.isUserAuthenticated = this.isUserAuthenticated.bind(this);
@@ -69,26 +73,30 @@ class App extends Component {
 
   render() {
     const { canMakeRegisterChoice, canConfirmRegister, isAuthenticated, userRole } = this.state;
-    console.log("IS AUTHENTICATED HERE : "+isAuthenticated+ " "+userRole);
     return (<>
       <Router>
-        <Navbar isAuthenticated={this.state.isAuthenticated} userRole={this.state.userRole}/>
+        <Navbar app={this}/>
         <Switch>
-          <Route exact path='/' component={Home} />
+          <Route exact path='/'>
+            <Home app={this}/>
+          </Route>
           <Route exact path='/reports'>
-            { (isAuthenticated !== null && userRole !== -1) ? ((isAuthenticated === true && userRole === 2) ?  <Reports/> : <Redirect to="/"/>) : null }
+            { (isAuthenticated !== null && userRole !== -1) ? ((isAuthenticated === true && userRole === 2) ?  <Reports app={this}/> : <Redirect to="/"/>) : null }
           </Route>
           <Route exact path='/products'>
-            { (isAuthenticated !== null && userRole !== -1) ? ((isAuthenticated === true && userRole === 2) ?  <Products/> : <Redirect to="/"/>) : null }
+            { (isAuthenticated !== null && userRole !== -1) ? ((isAuthenticated === true && userRole === 2) ?  <Products app={this}/> : <Redirect to="/"/>) : null }
           </Route>
           <Route exact path='/articles/add'>
-            { (isAuthenticated !== null && userRole !== -1) ? ((isAuthenticated === true && userRole === 2) ?  <AddArticle/> : <Redirect to="/"/>) : null }
+            { (isAuthenticated !== null && userRole !== -1) ? ((isAuthenticated === true && userRole === 2) ?  <AddArticle app={this}/> : <Redirect to="/"/>) : null }
+          </Route>
+          <Route exact path='/articles/edit'>
+            { (isAuthenticated !== null && userRole !== -1) ? ((isAuthenticated === true && userRole === 2) ?  <EditArticle app={this}/> : <Redirect to="/articles/add"/>) : null }
           </Route>
           <Route exact path="/register">
             { (isAuthenticated !== null) ? ((isAuthenticated === false || isAuthenticated === undefined) ?  <Register app={this}/> : <Redirect to="/"/>) : <Register app={this}/> }
           </Route>
           <Route exact path="/login">
-            { (isAuthenticated !== null) ? ((isAuthenticated === false || isAuthenticated === undefined) ?  <LogIn/> : <Redirect to="/"/>) : <LogIn/> }
+            { (isAuthenticated !== null) ? ((isAuthenticated === false || isAuthenticated === undefined) ?  <LogIn app={this}/> : <Redirect to="/"/>) : <LogIn app={this}/> }
           </Route>
           <Route exact path="/register/choices">
             {canMakeRegisterChoice !== null ? (canMakeRegisterChoice === true ? <RegisterChoices app={this}/> : <Redirect to="/register"/>) : null}
@@ -97,7 +105,9 @@ class App extends Component {
             {canConfirmRegister !== null ? (canConfirmRegister === true ? <RegisterConfirm app={this}/> : <Redirect to="/register"/>) : null}
           </Route>
           <Route exact path="/files/upload" component={FileUpload} />
-          <Route exact path="*" component={Error404} />
+          <Route exact path="*">
+            <Error404 app={this}/>
+          </Route>
         </Switch>
       </Router>
     </>)
