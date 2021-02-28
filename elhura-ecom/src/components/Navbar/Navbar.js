@@ -9,13 +9,11 @@ import { withStyles } from "@material-ui/core/styles";
 import { navbar } from "./Styles/NavbarStyles";
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
-import {createBrowserHistory} from 'history';
 import {AppBar, Button, FormControl, Input, InputLabel, Toolbar} from "@material-ui/core";
 
 const authService = require('../../services/auth');
 const navbarService = require('../../services/navbar');
-
-export const history = createBrowserHistory({forceRefresh:true});
+const historyService = require('../../services/history');
 
 class Navbar extends Component {
 
@@ -62,7 +60,7 @@ class Navbar extends Component {
       userRole: -1
     });
     console.log("USER ROLE : "+this.props.app.state.userRole)
-    //history.push("/");
+    historyService.history(true).push('/');
   }
 
   menuItems() {
@@ -110,11 +108,6 @@ class Navbar extends Component {
                     <Link to={"/articles/add"} className={classes.link}>
                       <Typography variant="body2">
                         Add
-                      </Typography>
-                    </Link>
-                    <Link to={"/articles/edit"} className={classes.link}>
-                      <Typography variant="body2">
-                        Edit
                       </Typography>
                     </Link>
                   </Toolbar>

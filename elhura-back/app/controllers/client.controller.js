@@ -11,16 +11,15 @@ const authService = require('../services/auth');
 // Create and Save a new Client
 exports.create = (req, res) => {
     // Validate request
-    if (!req.body.idUser) {
+    /*if (!req.body.idUser) {
         return res.status(400).send({
             message: "Client id can not be empty"
         });
-    }
+    }*/
 
     let verifyCode = utils.getRandomCode();
 
     const client = new Client({
-        idUser: req.body.idUser,
         idRole: req.body.idRole,
         idShipping: null,
         idAddress: null,

@@ -14,12 +14,10 @@ import CloseIcon from "@material-ui/icons/Close";
 import logo from "../../../resources/images/logo.jpg";
 import { Grid } from "@material-ui/core";
 import RegistrationConfirmation from "./Forms/RegistrationConfirmation";
-import {createBrowserHistory} from 'history';
 
 require('dotenv').config();
 const authService = require('../../../services/auth');
-
-export const history = createBrowserHistory({forceRefresh:true})
+const historyService = require('../../../services/history');
 
 class RegistrationConfirm extends Component {
   state = {
@@ -97,7 +95,7 @@ class RegistrationConfirm extends Component {
           error: "Incorrect OTP password"
         });
       } else{
-        history.push('/');
+        historyService.history(true).push('/');
       }
     }else{
       this.setState({

@@ -111,7 +111,7 @@ class FileUpload extends Component {
             isError
         } = this.state;
 
-        const { classes } = this.props
+        const { classes, locationState } = this.props
         return (
             <div className="mg20">
                 {currentFile && (
@@ -133,7 +133,7 @@ class FileUpload extends Component {
                         type="file"
                         onChange={this.selectFile} />
                     {<Avatar className={classes.avatar}>
-                        <img className={classes.logo} src={imageIcon} alt="Logo" />
+                        <img className={classes.logo} src={locationState !== undefined ? locationState.avatarUrl : imageIcon} alt="Logo" />
                     </Avatar>}
                 </label>
                 <div className="file-name">

@@ -27,9 +27,16 @@ class SimpleSelect extends Component {
     }
 
     handleChange = (event) => {
-        this.props.addArticleComponent.setState({
-            category: event.target.value
-        })
+        if (this.props.addArticleComponent !== undefined) {
+            this.props.addArticleComponent.setState({
+                category: event.target.value
+            })
+        }
+        if (this.props.editArticleComponent !== undefined) {
+            this.props.editArticleComponent.setState({
+                category: event.target.value
+            })
+        }
     };
 
     getCategories = (item) => {
@@ -47,7 +54,7 @@ class SimpleSelect extends Component {
     }
 
     render() {
-        const { classes, app } = this.props
+        const { classes, app, editArticleComponent, locationState } = this.props
         const { category, categories } = this.state
         return (
             <div className={classes.dropdown}>
@@ -58,7 +65,7 @@ class SimpleSelect extends Component {
                         id="demo-simple-select"
                         className={classes.selectValue}
                         value={category}
-                        defaultValue={app.state.articleBeingEdited ? app.state.articleBeingEdited.idCategory : null}
+                        defaultValue={locationState !== undefined ? locationState.idCategory : null}
                         onChange={this.handleChange}
                     >
                         { categories && categories.sort((item1, item2) => helpers.compareStrings(item1.nameCategory, item2.nameCategory)).map(item => this.getCategories(item)) }

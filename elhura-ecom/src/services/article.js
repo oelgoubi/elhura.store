@@ -54,12 +54,11 @@ export const create = async (data) => {
 }
 
 export const update = async (id, data) => {
+    console.log("HELLO MAN")
     return await axios({
         method: 'PUT',
         url: `/api/articles/${id}`,
-        data: {
-            data
-        }
+        data: data
     });
 }
 

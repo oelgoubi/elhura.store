@@ -15,11 +15,9 @@ import VisibilityTwoToneIcon from "@material-ui/icons/VisibilityTwoTone";
 import VisibilityOffTwoToneIcon from "@material-ui/icons/VisibilityOffTwoTone";
 import CloseIcon from "@material-ui/icons/Close";
 import logo from "../../../resources/images/logo.jpg";
-import {createBrowserHistory} from 'history';
 
 const authService = require('../../../services/auth');
-
-export const history = createBrowserHistory({forceRefresh:true})
+const historyService = require('../../../services/history');
 
 class LogInForm extends Component {
   state = {
@@ -65,7 +63,7 @@ class LogInForm extends Component {
         error: "Username or password invalid"
       });
     } else{
-      history.push('/');
+      historyService.history(true).push('/');
     }
   };
 

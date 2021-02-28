@@ -7,32 +7,39 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { Avatar, CardHeader, CardMedia, IconButton } from '@material-ui/core';
 import {mainArticles} from "./Styles/ArticlesStyles";
-import {createBrowserHistory} from 'history';
+import {withRouter} from "react-router-dom";
+import {register} from "../Auth/Register/Styles/RegistrationStyles";
 
-export const history = createBrowserHistory({forceRefresh:false})
+const historyService = require('../../services/history');
+const articleService = require('../../services/article');
 
 class ArticleItem extends Component {
     constructor(props) {
         super(props);
         this.editArticle = this.editArticle.bind(this);
+        this.deleteArticle = this.deleteArticle.bind(this);
     }
 
-    editArticle = async (article) => {
-        console.log("ARTICLE BEING : ")
-        console.log(this.props.app.articleBeingEdited)
-        await this.props.app.setState({
-            articleBeingEdited: article
-        })
-        console.log("ARTICLE BEING : ")
-        console.log(this.props.app.articleBeingEdited)
-        history.push("/articles/edit")
-        console.log("ARTICLE BEING : ")
-        console.log(this.props.app.articleBeingEdited)
+    editArticle = async (article, e) => {
+        historyService.history(true).push("/articles/edit", article);
+    }
+
+    deleteArticle = async (article, e) => {
+        await articleService.deleteArticle(article.idArticle)
+        historyService.history(true).push("/products", article);
     }
 
     render(){
-        const { designation, idCategory, unitPrice, wholesalePrice, description, avatarUrl, app, classes} = this.props;
-
+        const { idArticle, designation, idCategory, unitPrice, wholesalePrice, description, avatarUrl, app, classes} = this.props;
+        const article = {
+            idArticle,
+            idCategory,
+            designation,
+            unitPrice,
+            wholesalePrice,
+            description,
+            avatarUrl
+        }
         return (
             <Card className={classes.card}>
                 <CardMedia
@@ -57,17 +64,17 @@ class ArticleItem extends Component {
                             <Button
                                 variant="contained"
                                 className={classes.btn_commander}
-                                onClick={() => this.editArticle({
-                                    idCategory,
-                                    designation,
-                                    unitPrice,
-                                    wholesalePrice,
-                                    description
-                                })}
+                                onClick={(e) => this.editArticle(article, e)}
                             >
                                 Edit
                             </Button>
-                            <Button  variant="contained" className={classes.btn_offer}>Delete</Button>
+                            <Button
+                                variant="contained"
+                                className={classes.btn_offer}
+                                onClick={(e) => this.deleteArticle(article, e)}
+                            >
+                                Delete
+                            </Button>
                         </React.Fragment>)
                     }
                 </CardActions>
@@ -76,4 +83,4 @@ class ArticleItem extends Component {
     }
 };
 
-export default withStyles(mainArticles)(ArticleItem);
+export default withRouter(withStyles(mainArticles)(ArticleItem));

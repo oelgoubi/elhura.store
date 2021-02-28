@@ -21,7 +21,7 @@ class Content extends Component {
 
     getContent = (item) => {
         return (
-            <Grid item xs={12}  sm={3}>
+            <Grid item xs={12}  sm={(this.props.app.state.path === '/products' || this.props.app.state.path === '/') ? 2 : 3}>
                 { this.props.contentType === "article" && <ArticleItem {...item} app={this.props.app}/> }
             </Grid>
         );

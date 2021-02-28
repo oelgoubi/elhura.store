@@ -18,6 +18,7 @@ import axios from "axios";
 
 require('dotenv').config()
 const authService = require('../../../services/auth');
+const historyService = require('../../../services/history');
 
 class RegistrationChoices extends Component {
   state = {
@@ -68,7 +69,6 @@ class RegistrationChoices extends Component {
 
   register = async (choices) => {
     const response = await axios.post('/api/auth/register', {
-      idUser: 4,
       idRole: choices.customer ? 1 : 2,
       password: this.state.password,
       email: this.state.email
@@ -91,7 +91,7 @@ class RegistrationChoices extends Component {
       canConfirmRegister: canConfirmRegister,
     })
 
-    this.props.history.push('/register/confirm', {
+    historyService.history(true).push('/register/confirm', {
       email: this.state.email,
       password: this.state.password,
       passwordConfirm: this.state.passwordConfirm,

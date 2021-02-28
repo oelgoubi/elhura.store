@@ -1,8 +1,10 @@
 /* jshint indent: 2 */
+const db = require("../models");
+const CartElement = db.CartElement;
 
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('Article', {
+  const Article = sequelize.define('Article', {
     idArticle: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -72,6 +74,20 @@ module.exports = function(sequelize, DataTypes) {
           { name: "idUser" },
         ]
       },
-    ]
+    ]/*,
+    associate: function(models) {
+      Article.hasMany(models.CartElement, {
+        onDelete: 'cascade',
+        foreignKey: { allowNull: false },
+        hooks: true
+      });
+    }*/
   });
+
+  Article.hasMany(sequelize.models.CartElement, {
+    onDelete: 'cascade',
+    hooks: true
+  });
+
+  return Article;
 };

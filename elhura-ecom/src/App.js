@@ -26,8 +26,7 @@ class App extends Component {
       canConfirmRegister: null,
       isAuthenticated: null,
       userRole: -1,
-      path: null,
-      articleBeingEdited: null
+      path: null
     };
     this.passToNextSteps = this.passToNextSteps.bind(this);
     this.isUserAuthenticated = this.isUserAuthenticated.bind(this);

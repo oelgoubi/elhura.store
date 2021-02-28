@@ -12,16 +12,18 @@ import FileUpload from "../Files/FileUpload";
 import Dropdown from "../Toolbox/Dropdown";
 import { Grid } from '@material-ui/core'
 import ArticleList from "./ArticleList";
+import {withRouter} from "react-router-dom";
 
 const articleService = require('../../services/article');
 const routeDataService  = require('../../services/routeData');
+const historyService  = require('../../services/history');
 
 class EditArticle extends Component {
     constructor(props) {
         super(props);
         this.errorClose = this.errorClose.bind(this);
         this.handleChange = this.handleChange.bind(this);
-        //this.saveArticle = this.saveArticle.bind(this);
+        this.updateArticle = this.updateArticle.bind(this);
         this.newArticle = this.newArticle.bind(this);
 
         this.state = {
@@ -42,6 +44,15 @@ class EditArticle extends Component {
         this.props.app.setState({
             path : routeData[0].path
         })
+        const { state } = this.props.location
+        this.setState({
+            category: state.idCategory,
+            designation: state.designation,
+            unitPrice: state.unitPrice,
+            wholesalePrice: state.wholesalePrice,
+            avatarName: state.avatarName,
+            description: state.description
+        })
     }
 
     errorClose = e => {
@@ -56,7 +67,7 @@ class EditArticle extends Component {
         });
     };
 
-    saveArticle = async (e) => {
+    updateArticle = async (id, e) => {
         var data = {
             idCategory: this.state.category,
             designation: this.state.designation,
@@ -67,7 +78,7 @@ class EditArticle extends Component {
         };
 
         try {
-            await articleService.create(data)
+            await articleService.update(id, data)
         } catch(error) {
             console.log(error)
         }
@@ -85,8 +96,11 @@ class EditArticle extends Component {
 
     render() {
         const { classes, app } = this.props
-        console.log("PROPS : ")
-        console.log(app.state.articleBeingEdited)
+        const { state } = this.props.location
+
+        if(state === undefined) {
+            historyService.history(true).push('/products')
+        }
         return (
             <React.Fragment>
                 <Grid container direction="column" >
@@ -95,12 +109,12 @@ class EditArticle extends Component {
                             <div className={classes.main}>
                                 <CssBaseline />
                                 <Paper className={classes.paper}>
-                                    <FileUpload addArticleComponent={this}/>
+                                    <FileUpload addArticleComponent={this} locationState={state}/>
                                     <form
                                         className={classes.form}
-                                        onSubmit={(e) => this.saveArticle(e)}
+                                        onSubmit={(e) => this.updateArticle(state.idArticle, e)}
                                     >
-                                        <Dropdown addArticleComponent={this} app={app}/>
+                                        <Dropdown editArticleComponent={this} app={app} locationState={state}/>
                                         <FormControl required fullWidth margin="normal">
                                             <InputLabel htmlFor="designation" className={classes.labels}>
                                                 Designation
@@ -110,7 +124,7 @@ class EditArticle extends Component {
                                                 type="designation"
                                                 autoComplete="designation"
                                                 className={classes.inputs}
-                                                defaultValue={app.state.articleBeingEdited ? app.state.articleBeingEdited.designation : null}
+                                                defaultValue={state.designation}
                                                 disableUnderline={true}
                                                 onChange={this.handleChange("designation")}
                                             />
@@ -124,7 +138,7 @@ class EditArticle extends Component {
                                                 type="unitprice"
                                                 autoComplete="unitprice"
                                                 className={classes.inputs}
-                                                defaultValue={app.state.articleBeingEdited ? app.state.articleBeingEdited.unitPrice : null}
+                                                defaultValue={state.unitPrice}
                                                 disableUnderline={true}
                                                 onChange={this.handleChange("unitPrice")}
                                             />
@@ -138,7 +152,7 @@ class EditArticle extends Component {
                                                 type="wholesaleprice"
                                                 autoComplete="wholesaleprice"
                                                 className={classes.inputs}
-                                                defaultValue={app.state.articleBeingEdited ? app.state.articleBeingEdited.wholesalePrice : null}
+                                                defaultValue={state.wholesalePrice}
                                                 disableUnderline={true}
                                                 onChange={this.handleChange("wholesalePrice")}
                                             />
@@ -159,7 +173,7 @@ class EditArticle extends Component {
                                                 InputProps={{
                                                     className: classes.inputs
                                                 }}
-                                                defaultValue={app.state.articleBeingEdited ? app.state.articleBeingEdited.description : null}
+                                                defaultValue={state.description}
                                                 onChange={this.handleChange("description")}
                                             />
                                         </FormControl>
@@ -226,4 +240,4 @@ class EditArticle extends Component {
     }
 }
 
-export default withStyles(mainArticles)(EditArticle)
+export default withRouter(withStyles(mainArticles)(EditArticle));

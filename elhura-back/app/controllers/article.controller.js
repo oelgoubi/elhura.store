@@ -124,60 +124,68 @@ exports.findOne = (req, res) => {
 };
 
 // Update an existing Article
-exports.update = (req, res) => {
+exports.update = async (req, res) => {
     // Validate Request
-    if(!req.params.id) {
+    console.log("ID ARTICLE : "+req.params.idArticle)
+    console.log("AVATAR : "+req.body.avatarName)
+    if(!req.params.idArticle) {
         return res.status(400).send({
             message: "Article id can not be empty"
         });
     }
 
     // Find note and update it with the request body
-    Article.update({
-        idCategory : req.body.idCategory,
-        designation : req.body.designation,
-        unitPrice : req.body.unitPrice,
-        wholesalePrice : req.body.wholesalePrice
-    }, {
-        where: {
-            idArticle: req.params.idArticle
-        }
-    })
-        .then(article => {
-            if(!article) {
-                return res.status(404).send({
-                    message: "Article not found with id " + req.params.id
-                });
+    try{
+        const article = await Article.update({
+            idCategory : req.body.idCategory,
+            designation : req.body.designation,
+            unitPrice : req.body.unitPrice,
+            wholesalePrice : req.body.wholesalePrice,
+            avatarUrl : req.body.avatarName !== undefined ? process.env.APP_URL+"/api/files/"+req.body.avatarName : this.avatarUrl,
+            description : req.body.description
+        }, {
+            where: {
+                idArticle: req.params.idArticle
             }
-            res.send(article);
-        }).catch(err => {
+        })
+
+        if(!article) {
+            return res.status(404).send({
+                message: "Article not found with id " + req.params.idArticle
+            });
+        }
+
+        res.send(article);
+    }catch(err){
         if(err.kind === 'ObjectId') {
             return res.status(404).send({
-                message: "Article not found with id " + req.params.id
+                message: "Article not found with id " + req.params.idArticle
             });
         }
         return res.status(500).send({
-            message: "Error updating article with id " + req.params.id
+            message: "Error updating article with id " + (req.params.idArticle !== undefined ? req.params.idArticle : "")
         });
-    });
+    }
 };
 
 //Delete a article by id
-exports.deleteOne = (req, res) => {
-    Article.destroy({
-        where : {
-            idUser: req.params.idUser,
-            idArticle: req.params.idArticle
-        }
-    })
-        .then(article => {
-            if(!article) {
-                return res.status(404).send({
-                    message: "Article not found with idUser="+req.params.idUser+ " idArticle=" + req.params.idArticle
-                });
+exports.deleteOne = async (req, res) => {
+    try {
+        const article = await Article.destroy({
+            where: {
+                idArticle: req.params.idArticle
             }
-            res.send({message: "Article deleted successfully!"});
-        }).catch(err => {
+        })
+
+        if (!article) {
+            return res.status(404).send({
+                message: "Article not found with idUser=" + req.params.idUser + " idArticle=" + req.params.idArticle
+            });
+        }
+        res.send({message: "Article deleted successfully!"});
+    } catch(err) {
+        console.log("THE ERROR : ")
+        console.log(err.message)
         if(err.kind === 'ObjectId' || err.name === 'NotFound') {
             return res.status(404).send({
                 message: "Article not found with idUser="+req.params.idUser+ " idArticle=" + req.params.idArticle
@@ -186,7 +194,7 @@ exports.deleteOne = (req, res) => {
         return res.status(500).send({
             message: "Could not delete article with idUser="+req.params.idUser+ " idArticle=" + req.params.idArticle
         });
-    });
+    }
 };
 
 //Delete a article by id
