@@ -1,8 +1,8 @@
 /* jshint indent: 2 */
-
 const Sequelize = require('sequelize');
+
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('CartElement', {
+  const cartElement = sequelize.define('CartElement', {
     idCartElement: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -57,4 +57,6 @@ module.exports = function(sequelize, DataTypes) {
       },
     ]
   });
+
+  return cartElement;
 };

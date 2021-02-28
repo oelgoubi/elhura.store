@@ -18,6 +18,7 @@ import axios from "axios";
 
 require('dotenv').config()
 const authService = require('../../../services/auth');
+const historyService = require('../../../services/history');
 
 class Registration extends Component {
   state = {
@@ -130,7 +131,7 @@ class Registration extends Component {
             canConfirmRegister: false,
           })
 
-          this.props.history.push('/register/choices', {
+          historyService.history(true).push('/register/choices', {
             email: this.state.email,
             password: this.state.password,
             passwordConfirm: this.state.passwordConfirm

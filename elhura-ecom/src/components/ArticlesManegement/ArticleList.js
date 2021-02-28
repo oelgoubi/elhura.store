@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import { Grid } from '@material-ui/core'
-import { fade, makeStyles } from "@material-ui/core/styles";
 import SearchIcon from '@material-ui/icons/Search'
 import {
     Toolbar,
@@ -8,30 +7,12 @@ import {
 } from '@material-ui/core'
 import Content from './Content';
 
-const useStyles = makeStyles((theme) => ({
-    searchContainer: {
-        display: "flex",
-        backgroundColor: fade(theme.palette.common.white, 0.15),
-        paddingLeft: "500px",
-        paddingRight: "20px",
-        marginTop: "5px",
-        marginBottom: "5px",
-    },
-    searchIcon: {
-        alignSelf: "flex-end",
-        marginBottom: "5px",
-    },
-    searchInput: {
-        width: "200px",
-        margin: "5px",
-    },
-}));
-
 class ArticleList extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-            isAuthenticated : null
+            isAuthenticated : null,
+            contentType : "article"
         }
     };
 
@@ -43,28 +24,28 @@ class ArticleList extends Component {
     };
 
     render() {
-        const classes = useStyles;
+        const { classes, app } = this.props;
         return (
             <Grid container direction="column" >
                 <Grid item sm={12}>
                     <Toolbar >
-                        <div className={classes.searchContainer}>
-                            <SearchIcon className={classes.searchIcon} />
-                            <TextField
-                                className={classes.searchInput}
-                                onChange={this.handleSearchChange}
-                                label="Trouver un Article"
-                                variant="standard"
-                            />
+                        <div className={classes.toolbar}>
+                            <div className={classes.searchContainer}>
+                                <SearchIcon className={classes.searchIcon} />
+                                <TextField
+                                    className={classes.searchInput}
+                                    onChange={this.handleSearchChange}
+                                    label="Search an article"
+                                    variant="standard"
+                                />
+                            </div>
                         </div>
                     </Toolbar>
                 </Grid>
                 <Grid item container spacing={2}>
-                    <Grid item xs={0} sm={2}></Grid>
-                    <Grid item xs={12} sm={9}>
-                        <Content />
+                    <Grid item xs={12} sm={12}>
+                        <Content contentType={this.state.contentType} app={app}/>
                     </Grid>
-                    <Grid item xs={0} sm={1}></Grid>
                 </Grid>
             </Grid>
         )

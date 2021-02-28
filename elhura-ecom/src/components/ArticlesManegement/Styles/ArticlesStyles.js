@@ -1,4 +1,5 @@
 import { red } from "@material-ui/core/colors";
+import {fade} from "@material-ui/core/styles";
 
 const orange = "#F2A74B";
 const textLight = "#eaf2f4";
@@ -30,29 +31,23 @@ export const mainArticles = theme => ({
   main: {
     marginTop: theme.spacing(8),
     marginBottom: theme.spacing(4),
-    marginRight: theme.spacing(3),
-    marginLeft: theme.spacing(3),
+    marginRight: "auto",
+    marginLeft: "auto",
     display: "block",
     width: "auto",
     [theme.breakpoints.up(400 + theme.spacing(2))]: {
       width: 400,
-      marginLeft: "auto",
       marginRight: "auto"
     }
   },
   paper: {
     position: "relative",
-    /*marginTop: theme.spacing(2),
-    padding: `${theme.spacing(2)}px ${theme.spacing(1)}px`,*/
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     background: backgroundDark,
     border: "5px solid skyblue",
     minWidth: "fit-content",
-    marginLeft: "-400px !important",
-    marginRight: "375px !important",
-    marginTop: "-25px !important",
 
     "&:hover": {
       boxShadow: "0px 24px 36px rgba(131,153,167,0.99)"
@@ -169,5 +164,53 @@ export const mainArticles = theme => ({
 
   passwordEye: {
     color: "skyblue"
+  },
+  searchContainer: {
+    display: "flex",
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    marginTop: "5px",
+    marginBottom: "5px",
+
+  },
+  toolbar: {
+    margin: "0 auto"
+  },
+  searchIcon: {
+    alignSelf: "flex-end",
+    marginBottom: "5px",
+  },
+  searchInput: {
+    width: "200px",
+    margin: "5px",
+  },
+
+  //
+  card:{
+    height:'400px',
+    position:'relative'
+  },
+  bullet: {
+    display: 'inline-block',
+    margin: '0 2px',
+    transform: 'scale(0.8)',
+  },
+  title: {
+    fontSize: 14,
+  },
+  pos: {
+    marginBottom: 12,
+  },
+  btn_commander:{
+    backgroundColor : 'orange',
+    color:'black',
+    textDecoration:'1px bold'
+  },
+  btn_offer:{
+    backgroundColor : 'grey',
+    color:'black',
+  },
+  actionBtns:{
+    position: "absolute",
+    bottom:'0'
   }
 });

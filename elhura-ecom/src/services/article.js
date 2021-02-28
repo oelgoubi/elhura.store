@@ -21,6 +21,16 @@ export const listArticles = async () => {
     return response.data;
 }
 
+export const listCategories = async () => {
+    const response = await axios({
+        method: 'GET',
+        url: '/api/categories'
+    });
+    console.log("Categories : ")
+    console.log(response)
+    return response.data;
+}
+
 export const getAll = async () => {
     return await axios({
         method: 'GET',
@@ -39,19 +49,16 @@ export const create = async (data) => {
     return await axios({
         method: 'POST',
         url: `/api/articles`,
-        data: {
-            data
-        }
+        data: data
     });
 }
 
 export const update = async (id, data) => {
+    console.log("HELLO MAN")
     return await axios({
         method: 'PUT',
         url: `/api/articles/${id}`,
-        data: {
-            data
-        }
+        data: data
     });
 }
 

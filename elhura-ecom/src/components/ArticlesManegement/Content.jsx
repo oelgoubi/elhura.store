@@ -1,45 +1,47 @@
   
 import React, {Component} from "react";
-import ArticleItem from "./ArticleItem"
+import ArticleItem from "./ArticleItem";
+import CategoryItem from "./CategoryItem";
 import { Grid } from "@material-ui/core";
-import articles from '../../mockData/constants'
 
 const articleService = require('../../services/article');
 
 class Content extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-            articles : null
+            content : null
         }
-        this.listArticles = this.listArticles.bind(this);
+        this.listContent = this.listContent.bind(this);
     }
 
     componentDidMount() {
-        this.listArticles()
+        this.listContent()
     }
 
-    getAricles = (aricle) => {
+    getContent = (item) => {
         return (
-            <Grid item xs={12}  sm={4}>
-                <ArticleItem {...aricle} />
+            <Grid item xs={12}  sm={(this.props.app.state.path === '/products' || this.props.app.state.path === '/') ? 2 : 3}>
+                { this.props.contentType === "article" && <ArticleItem {...item} app={this.props.app}/> }
             </Grid>
         );
     }
 
-    listArticles = async () => {
-        const articles = await articleService.listArticles();
+    listContent = async () => {
+        if (this.props.contentType === "article") {
+            const articles = await articleService.listArticles();
 
-        this.setState({
-            articles : articles
-        })
+            this.setState({
+                content : articles
+            })
+        }
     }
 
     render() {
-        const { articles } = this.state
+        const { content } = this.state
         return (
-            <Grid container spacing={3}>
-                { articles && articles.map(article => this.getAricles(article))}
+            <Grid container spacing={1}>
+                { content && content.map(item => this.getContent(item))}
             </Grid>
         );
     }
